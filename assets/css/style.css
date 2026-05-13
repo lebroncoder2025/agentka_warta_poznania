@@ -54,10 +54,6 @@ html {
   scroll-behavior: smooth;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   margin: 0;
   color: var(--text);
@@ -928,6 +924,10 @@ p {
   color: var(--muted);
 }
 
+.cookie-banner[hidden] {
+  display: none !important;
+}
+
 .cookie-banner {
   position: fixed;
   left: 16px;
@@ -940,7 +940,7 @@ p {
 }
 
 body.has-cookie-banner {
-  padding-bottom: 210px;
+  padding-bottom: 280px;
 }
 
 .cookie-banner__inner {
@@ -1229,37 +1229,10 @@ body.has-cookie-banner {
     padding: 20px;
   }
 
-  body.has-cookie-banner {
-    padding-bottom: 290px;
-  }
-
   .cookie-banner {
     left: 12px;
     right: 12px;
     bottom: 12px;
-  }
-
-  .cookie-banner__inner {
-    grid-template-columns: 1fr;
-  }
-
-  .cookie-banner__details {
-    width: 100%;
-  }
-
-  .cookie-banner__summary {
-    width: 100%;
-  }
-
-  .cookie-banner__actions {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    justify-content: stretch;
-    width: 100%;
-  }
-
-  .cookie-banner__actions .button {
-    min-width: 0;
-    width: 100%;
   }
 }
 
@@ -1351,7 +1324,7 @@ body.has-cookie-banner {
   }
 
   body.has-cookie-banner {
-    padding-bottom: 360px;
+    padding-bottom: 380px;
   }
 
   .cookie-banner {
@@ -1361,6 +1334,7 @@ body.has-cookie-banner {
   }
 
   .cookie-banner__inner {
+    grid-template-columns: 1fr;
     padding: 16px;
     border-radius: 22px;
   }
@@ -1369,11 +1343,22 @@ body.has-cookie-banner {
     gap: 8px;
   }
 
+  .cookie-banner__details {
+    width: 100%;
+  }
+
+  .cookie-banner__summary {
+    width: 100%;
+  }
+
   .cookie-banner__actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-content: stretch;
+    width: 100%;
   }
 
   .cookie-banner__actions .button {
+    min-width: 0;
     width: 100%;
   }
 
@@ -1507,6 +1492,16 @@ body.has-cookie-banner {
 /* ══════════════════════════════════════════
    RESPONSIVE — 420px (very small phone)
 ══════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+  .cookie-banner__actions {
+    grid-template-columns: 1fr;
+  }
+
+  body.has-cookie-banner {
+    padding-bottom: 500px;
+  }
+}
 
 @media (max-width: 420px) {
   .gallery-grid {
