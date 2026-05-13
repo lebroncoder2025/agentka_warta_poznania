@@ -1,0 +1,527 @@
+/* ── Day badge "N wolne" appended to day cells via dayCellDidMount ── */
+.agentka-day-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 7px;
+	margin: 4px 4px 0;
+	border-radius: 999px;
+	background: rgba(13, 92, 99, 0.12);
+	color: #083d47;
+	font-size: 0.72rem;
+	font-weight: 800;
+	letter-spacing: 0.01em;
+	pointer-events: none;
+}
+
+.agentka-booking-widget {
+	display: grid;
+	gap: 18px;
+}
+
+.agentka-booking-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.9fr);
+	gap: 22px;
+	align-items: start;
+}
+
+.agentka-booking-main,
+.agentka-booking-sidebar {
+	display: grid;
+	gap: 12px;
+}
+
+.agentka-booking-intro {
+	padding: 22px 24px;
+	border: 1px solid rgba(13, 92, 99, 0.1);
+	border-radius: 22px;
+	background: linear-gradient(135deg, rgba(13, 92, 99, 0.08), rgba(255, 255, 255, 0.72));
+}
+
+.agentka-booking-steps {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.agentka-booking-steps article,
+.agentka-summary-card,
+.agentka-slots-card {
+	padding: 18px;
+	border: 1px solid rgba(13, 92, 99, 0.12);
+	border-radius: 20px;
+	background: rgba(255, 255, 255, 0.76);
+	box-shadow: 0 12px 32px rgba(13, 92, 99, 0.06);
+}
+
+.agentka-booking-steps article {
+	display: grid;
+	gap: 8px;
+	min-height: 92px;
+}
+
+.agentka-booking-steps span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 999px;
+	background: rgba(13, 92, 99, 0.12);
+	color: #083d47;
+	font-weight: 800;
+}
+
+.agentka-booking-steps strong {
+	font-size: 0.98rem;
+	line-height: 1.3;
+}
+
+.agentka-booking-intro h3 {
+	margin: 8px 0 10px;
+	font-size: 1.35rem;
+}
+
+.agentka-kicker {
+	margin: 0;
+	color: #0d5c63;
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+#agentka-calendar {
+	max-width: 100%;
+	padding: 10px 12px;
+	border: 1px solid rgba(13, 92, 99, 0.12);
+	border-radius: 24px;
+	background: rgba(255, 255, 255, 0.88);
+	box-shadow: 0 16px 40px rgba(13, 92, 99, 0.08);
+}
+
+#agentka-calendar .fc {
+	--fc-border-color: rgba(13, 92, 99, 0.12);
+	--fc-page-bg-color: transparent;
+	--fc-neutral-bg-color: rgba(255, 255, 255, 0.58);
+	--fc-button-bg-color: #0d5c63;
+	--fc-button-border-color: #0d5c63;
+	--fc-button-hover-bg-color: #083d47;
+	--fc-button-hover-border-color: #083d47;
+	--fc-button-active-bg-color: #083d47;
+	--fc-button-active-border-color: #083d47;
+	--fc-event-border-color: transparent;
+	--fc-today-bg-color: rgba(217, 138, 61, 0.14);
+}
+
+#agentka-calendar .fc-daygrid-event {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 6px;
+	min-height: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
+#agentka-calendar .fc-daygrid-event:hover,
+#agentka-calendar .fc-daygrid-event:focus-visible {
+	transform: translateY(-1px);
+	box-shadow: 0 10px 22px rgba(13, 92, 99, 0.16);
+}
+
+#agentka-calendar .fc-daygrid-event .fc-event-title {
+	display: none;
+}
+
+#agentka-calendar .fc-daygrid-event .fc-event-time {
+	font-size: 0.78rem;
+	font-weight: 700;
+	line-height: 1.2;
+	color: #fff;
+}
+
+#agentka-calendar .fc-daygrid-event-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.95);
+	flex-shrink: 0;
+}
+
+#agentka-calendar .fc .is-available {
+	cursor: pointer;
+}
+
+/* Small event pill used in week/day/list views (hidden in month view via eventContent)
+   Keep these compact so they don't dominate the layout */
+#agentka-calendar .agentka-event-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 8px;
+	border-radius: 10px;
+	font-weight: 800;
+	font-size: 0.88rem;
+	line-height: 1;
+	color: inherit;
+	background: transparent;
+}
+
+#agentka-calendar .agentka-event-time {
+	font-size: 0.92rem;
+	font-weight: 900;
+	color: inherit;
+}
+
+/* Selected day styling */
+#agentka-calendar .fc-daygrid-day.is-selected {
+	box-shadow: inset 0 0 0 2px rgba(13,92,99,0.12);
+	background: rgba(13,92,99,0.06);
+	border-radius: 10px;
+}
+
+#agentka-calendar .fc-daygrid-event.is-available:hover,
+#agentka-calendar .fc-daygrid-event.is-available:focus-visible {
+	background: linear-gradient(135deg, #0b6e70 0%, #0c7f7e 100%);
+	box-shadow: 0 12px 30px rgba(13, 92, 99, 0.18);
+}
+
+#agentka-calendar .fc-daygrid-event-harness {
+	margin-top: 4px !important;
+}
+
+#agentka-calendar .fc-daygrid-day .fc-daygrid-day-top {
+	padding: 6px 8px;
+}
+
+#agentka-calendar .fc-daygrid-day-frame {
+	min-height: 62px;
+}
+
+#agentka-calendar .fc-daygrid-day {
+	cursor: pointer;
+	transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+#agentka-calendar .fc-daygrid-day:hover {
+	background: rgba(13, 92, 99, 0.08);
+	transform: translateY(-1px);
+}
+
+#agentka-calendar .fc-daygrid-day.agentka-day-has-slots .fc-daygrid-day-top {
+	position: relative;
+}
+
+#agentka-calendar .fc-daygrid-day.agentka-day-has-slots .fc-daygrid-day-top::after {
+	content: '';
+	position: absolute;
+	bottom: 8px;
+	right: 8px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #0d5c63;
+	box-shadow: 0 0 0 3px rgba(13, 92, 99, 0.12);
+}
+
+#agentka-calendar .fc-toolbar.fc-header-toolbar {
+	margin-bottom: 0.65rem;
+}
+
+#agentka-calendar .fc .fc-button {
+	border-radius: 999px;
+	box-shadow: none;
+	font-weight: 700;
+}
+
+#agentka-calendar .fc .fc-daygrid-day {
+	cursor: pointer;
+}
+
+#agentka-calendar .fc .fc-event {
+	padding: 6px 8px;
+	border-radius: 10px;
+	font-weight: 800;
+	font-size: 0.95rem;
+}
+
+/* Ensure day label area captures clicks and doesn't block event interaction */
+#agentka-calendar .fc-daygrid-day .fc-daygrid-day-top {
+    pointer-events: auto;
+}
+
+#agentka-calendar .fc .is-available {
+	background: linear-gradient(135deg, #0d5c63 0%, #0a757f 100%);
+	color: #fff;
+}
+
+#agentka-calendar .fc .is-booked {
+	background: rgba(96, 112, 126, 0.16);
+	color: #45535f;
+}
+
+.agentka-booking-sidebar {
+	position: sticky;
+	top: 94px;
+	max-height: calc(100vh - 114px);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	align-self: start;
+}
+
+@media (max-width: 900px) {
+	.agentka-booking-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.agentka-booking-sidebar {
+		position: static;
+		max-height: none;
+		overflow-y: visible;
+	}
+
+	#agentka-calendar {
+		padding: 8px;
+	}
+}
+
+#agentka-calendar .fc .is-booked {
+	background: rgba(96, 112, 126, 0.16);
+	color: #45535f;
+}
+
+.agentka-summary-card {
+	gap: 10px;
+}
+
+.agentka-summary-card strong {
+	display: block;
+	font-size: 1.1rem;
+	line-height: 1.35;
+	text-transform: capitalize;
+}
+
+.agentka-summary-meta {
+	margin: 0;
+	color: #60707e;
+	line-height: 1.55;
+}
+
+.agentka-reset-button {
+	justify-self: start;
+	padding: 10px 14px;
+	border: 0;
+	border-radius: 999px;
+	background: rgba(13, 92, 99, 0.1);
+	color: #083d47;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.agentka-slots-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 14px;
+}
+
+.agentka-slots-head h3 {
+	margin: 0;
+	font-size: 1.05rem;
+}
+
+.agentka-slot-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 42px;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(217, 138, 61, 0.15);
+	color: #8e5520;
+	font-weight: 800;
+}
+
+.agentka-slot-list {
+	display: grid;
+	gap: 10px;
+	max-height: 240px;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+.agentka-slot-button {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 14px 16px;
+	border: 1px solid rgba(13, 92, 99, 0.14);
+	border-radius: 16px;
+	background: #fff;
+	color: #1c2a37;
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+	transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.agentka-slot-button:hover,
+.agentka-slot-button:focus-visible {
+	transform: translateY(-1px);
+	border-color: rgba(13, 92, 99, 0.28);
+	box-shadow: 0 10px 22px rgba(13, 92, 99, 0.08);
+	outline: none;
+}
+
+.agentka-slot-button strong {
+	font-size: 1rem;
+	color: #083d47;
+}
+
+.agentka-slot-button span {
+	color: #60707e;
+	font-size: 0.88rem;
+	font-weight: 700;
+}
+
+.agentka-slot-button.is-active {
+	border-color: rgba(13, 92, 99, 0.48);
+	background: linear-gradient(135deg, rgba(13, 92, 99, 0.12), rgba(217, 138, 61, 0.1));
+	box-shadow: 0 14px 28px rgba(13, 92, 99, 0.1);
+}
+
+.agentka-slot-empty {
+	margin: 0;
+	padding: 18px;
+	border: 1px dashed rgba(13, 92, 99, 0.2);
+	border-radius: 16px;
+	background: rgba(13, 92, 99, 0.03);
+	color: #60707e;
+	line-height: 1.6;
+}
+
+.agentka-booking-panel {
+	padding: 24px;
+	border: 1px solid rgba(13, 92, 99, 0.12);
+	border-radius: 24px;
+	background: rgba(255, 255, 255, 0.78);
+	box-shadow: 0 16px 40px rgba(13, 92, 99, 0.08);
+}
+
+.agentka-booking-panel.is-complete {
+	border-color: rgba(13, 92, 99, 0.24);
+	box-shadow: 0 14px 28px rgba(13, 92, 99, 0.08);
+}
+
+.agentka-booking-panel.is-hidden {
+	display: none;
+}
+
+.agentka-selected-slot {
+	margin-bottom: 18px;
+	padding: 14px 16px;
+	border-radius: 16px;
+	background: rgba(217, 138, 61, 0.12);
+}
+
+.agentka-selected-slot span {
+	display: block;
+	color: #60707e;
+	font-size: 0.85rem;
+	font-weight: 700;
+}
+
+.agentka-selected-slot strong {
+	display: block;
+	margin-top: 6px;
+	color: #083d47;
+}
+
+.agentka-booking-form {
+	display: grid;
+	gap: 16px;
+}
+
+.agentka-form-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+}
+
+.agentka-booking-form label {
+	display: grid;
+	gap: 8px;
+}
+
+.agentka-booking-form span {
+	color: #45535f;
+	font-size: 0.92rem;
+	font-weight: 700;
+}
+
+.agentka-booking-form input,
+.agentka-booking-form textarea {
+	width: 100%;
+	padding: 14px 16px;
+	border: 1px solid rgba(13, 92, 99, 0.14);
+	border-radius: 16px;
+	background: #fff;
+	color: #1c2a37;
+	font: inherit;
+}
+
+.agentka-booking-form textarea {
+	resize: vertical;
+}
+
+.agentka-consent {
+	grid-template-columns: auto 1fr;
+	align-items: start;
+}
+
+.agentka-consent input {
+	width: 18px;
+	height: 18px;
+	margin-top: 2px;
+}
+
+.agentka-booking-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 14px;
+}
+
+.agentka-booking-status {
+	margin: 0;
+	color: #0d5c63;
+	font-weight: 700;
+}
+
+.agentka-booking-status.is-error {
+	color: #b14321;
+}
+
+.agentka-booking-form button[disabled] {
+	opacity: 0.72;
+	cursor: progress;
+}
+
+@media (max-width: 700px) {
+	.agentka-form-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.agentka-slots-head,
+	.agentka-slot-button {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}
+

@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="assets/css/style.css?v=4">
+  <link rel="stylesheet" href="assets/css/booking.css?v=4">
 </head>
 <body>
   <header class="site-header" id="top">
@@ -228,81 +229,69 @@
     </section>
 
     <section id="booking" class="section-pad reveal">
-      <div class="container booking-grid">
-        <div class="booking-copy">
+      <div class="container">
+        <div class="section-heading">
           <p class="eyebrow">Rezerwacja online</p>
           <h2>Kalendarz dla klientów osadzony bezpośrednio na stronie</h2>
-          <p class="section-copy">Z panelu WordPress ustawiasz dostępne terminy, a klient wybiera wolny slot i od razu zostawia dane kontaktowe. Bez chaosu w wiadomościach i bez ręcznego przepisywania terminów.</p>
-          <ul class="feature-list">
-            <li>dostępne terminy sterowane z panelu WordPress</li>
-            <li>blokowanie zajętych slotów po rezerwacji</li>
-            <li>potwierdzenie mailowe do obu stron</li>
-            <li>czytelny widok miesiąca, tygodnia i listy</li>
-          </ul>
+          <p class="section-copy">Z panelu WordPress ustawiasz dostępne terminy, a klient wybiera wolny slot i od razu zostawia dane kontaktowe.</p>
         </div>
 
-        <article class="booking-widget card">
-          <div class="booking-widget-head">
-            <div>
-              <p class="chip-label">Rezerwacja wizyty</p>
-              <h3>Najpierw dzień i godzina, dopiero potem formularz</h3>
-            </div>
-            <p>Wersja statyczna pokazuje układ i przepływ klienta bez backendu.</p>
-          </div>
-
-          <div class="booking-toolbar">
-            <div class="booking-toolbar-left">
-              <button type="button" class="calendar-nav" aria-label="Poprzedni miesiąc">‹</button>
-              <button type="button" class="calendar-nav" aria-label="Następny miesiąc">›</button>
-              <span class="calendar-today">Dziś</span>
-            </div>
-            <h4 id="booking-month-label">maj 2026</h4>
-            <div class="booking-toolbar-right">
-              <span class="view-pill active">Miesiąc</span>
-              <span class="view-pill">Tydzień</span>
-              <span class="view-pill">Lista</span>
+        <div class="agentka-booking-widget">
+          <div class="agentka-booking-intro">
+            <p class="agentka-kicker">Rezerwacja wizyty</p>
+            <h3>Najpierw dzień i godzina, dopiero potem formularz</h3>
+            <p>Kalendarz pokazuje tylko terminy udostępnione przez biuro. Po kliknięciu dnia zobaczysz konkretne godziny, a po wyborze godziny formularz zapisze rezerwację.</p>
+            <div class="agentka-booking-steps">
+              <article><span>1</span><strong>Wybierz dzień</strong></article>
+              <article><span>2</span><strong>Kliknij godzinę</strong></article>
+              <article><span>3</span><strong>Wyślij formularz</strong></article>
             </div>
           </div>
 
-          <div class="booking-layout">
-            <div class="booking-calendar">
-              <div class="calendar-weekdays" aria-hidden="true">
-                <span>pon.</span>
-                <span>wt.</span>
-                <span>śr.</span>
-                <span>czw.</span>
-                <span>pt.</span>
-                <span>sob.</span>
-                <span>niedz.</span>
-              </div>
-              <div id="booking-calendar" class="calendar-grid" aria-label="Kalendarz terminów"></div>
+          <div class="agentka-booking-layout">
+            <div class="agentka-booking-main">
+              <div id="agentka-calendar"></div>
             </div>
-
-            <aside class="booking-sidebar">
-              <div class="selected-day card-soft">
-                <p class="chip-label">Wybrany dzień</p>
-                <strong id="booking-date-label">poniedziałek, 25 maja 2026</strong>
-                <p id="booking-date-note">Wybierz dzień z kalendarza, aby zobaczyć dostępne godziny.</p>
-              </div>
-
-              <div class="slot-panel card-soft">
-                <p class="chip-label">Dostępne godziny</p>
-                <div id="booking-slot-list" class="slot-list"></div>
-              </div>
-
-              <div class="booking-form-preview card-soft">
-                <p class="chip-label">Formularz rezerwacji</p>
-                <div class="preview-fields">
-                  <span>Imię i nazwisko</span>
-                  <span>Telefon</span>
-                  <span>E-mail</span>
-                  <span>Uwagi</span>
+            <aside class="agentka-booking-sidebar">
+              <section class="agentka-summary-card">
+                <p class="agentka-kicker">Wybrany dzień</p>
+                <strong id="agentka-selected-date-text">Wybierz dzień w kalendarzu</strong>
+                <p id="agentka-selected-date-meta" class="agentka-summary-meta">Pokażę tu listę dostępnych godzin dla wybranego dnia.</p>
+                <button type="button" id="agentka-reset-selection" class="agentka-reset-button">Wyczyść wybór</button>
+              </section>
+              <section class="agentka-slots-card">
+                <div class="agentka-slots-head">
+                  <h3>Dostępne godziny</h3>
+                  <span id="agentka-slot-count" class="agentka-slot-count">0</span>
                 </div>
-                <a class="button primary full-width" href="#contact">Wyślij rezerwację</a>
+                <div id="agentka-slot-list" class="agentka-slot-list">
+                  <p class="agentka-slot-empty">Wybierz dzień z kalendarza, aby zobaczyć godziny.</p>
+                </div>
+              </section>
+              <div id="agentka-booking-panel" class="agentka-booking-panel is-hidden">
+                <div class="agentka-selected-slot">
+                  <span>Wybrany termin</span>
+                  <strong id="agentka-selected-slot-text">—</strong>
+                </div>
+                <form id="agentka-booking" class="agentka-booking-form">
+                  <div class="agentka-form-grid">
+                    <label><span>Imię i nazwisko</span><input name="name" placeholder="Jan Kowalski" required></label>
+                    <label><span>E-mail</span><input type="email" name="email" placeholder="jan@firma.pl" required></label>
+                    <label><span>Telefon</span><input name="phone" placeholder="+48 600 000 000" required></label>
+                    <label><span>Typ sprawy</span><input name="topic" placeholder="OC / AC, dom, firma"></label>
+                  </div>
+                  <label><span>Dodatkowe informacje</span><textarea name="message" rows="4" placeholder="Napisz krótko, czego dotyczy konsultacja."></textarea></label>
+                  <label class="agentka-consent"><input type="checkbox" name="consent" value="1" required><span>Potwierdzam, że mogę przekazać dane kontaktowe w celu obsługi rezerwacji.</span></label>
+                  <input type="hidden" name="slot_id">
+                  <div class="agentka-booking-actions">
+                    <button type="submit">Potwierdź rezerwację</button>
+                    <p id="agentka-booking-status" class="agentka-booking-status" role="status" aria-live="polite"></p>
+                  </div>
+                </form>
               </div>
             </aside>
           </div>
-        </article>
+        </div>
       </div>
     </section>
 
@@ -372,6 +361,8 @@
     "url": "https://warta.ubezpieczenie.com.pl"
   }
   </script>
-  <script src="assets/js/site.js?v=3" defer></script>
+  <script src="assets/vendor/fullcalendar/index.global.min.js"></script>
+  <script src="assets/js/booking-static.js"></script>
+  <script src="assets/js/site.js?v=4" defer></script>
 </body>
 </html>
