@@ -549,15 +549,16 @@ p {
 
 .booking-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
+  gap: 24px;
   align-items: start;
 }
 
 .booking-copy {
   display: grid;
   gap: 14px;
-  padding-right: 12px;
+  padding-right: 8px;
+  max-width: 42ch;
 }
 
 .feature-list {
@@ -570,7 +571,7 @@ p {
 }
 
 .booking-widget {
-  padding: 22px;
+  padding: 18px;
 }
 
 .booking-widget-head {
@@ -632,7 +633,7 @@ p {
 
 .booking-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(290px, 0.62fr);
+  grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.56fr);
   gap: 18px;
 }
 
@@ -655,21 +656,22 @@ p {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
+  gap: 10px;
 }
 
 .calendar-day {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  min-height: 112px;
-  padding: 12px;
+  gap: 6px;
+  min-height: 126px;
+  padding: 11px 10px 10px;
   border-radius: 20px;
   border: 1px solid rgba(13, 92, 99, 0.12);
   background: rgba(255, 255, 255, 0.86);
   color: var(--primary-deep);
   text-align: left;
   cursor: pointer;
+  overflow: hidden;
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
@@ -694,35 +696,42 @@ p {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 .day-number {
-  font-size: 1.15rem;
+  font-size: 1.08rem;
   font-weight: 900;
 }
 
 .day-month {
-  font-size: 0.72rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
+.calendar-day strong {
+  font-size: 0.84rem;
+  line-height: 1.1;
+}
+
 .day-slots {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 0.72rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 0.66rem;
   font-weight: 800;
 }
 
 .day-slots span {
-  padding: 0.28rem 0.5rem;
+  padding: 0.24rem 0.42rem;
   border-radius: 999px;
   background: rgba(13, 92, 99, 0.08);
   color: var(--primary);
+  width: fit-content;
 }
 
 .booking-sidebar {
