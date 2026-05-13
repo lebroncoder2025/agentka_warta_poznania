@@ -37,6 +37,7 @@ body {
     linear-gradient(180deg, #fffaf4 0%, #fff7ef 100%);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 body::selection {
@@ -1194,6 +1195,11 @@ p {
   .section-band-grid {
     border-radius: var(--radius-sm);
     padding: 18px 16px;
+  }
+
+  .map-wrap,
+  .map-wrap iframe {
+    min-height: 220px;
   }
 
   .footer-inner {
