@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initRevealOnScroll();
   initGalleryLightbox();
+  initCookieResetLinks();
   initCookieBanner();
   initBookingDemo();
 });
@@ -55,6 +56,28 @@ function initSmoothScroll() {
   });
 }
 
+function initCookieResetLinks() {
+  const resetLinks = Array.prototype.slice.call(document.querySelectorAll('[data-cookie-reset]'));
+  if (!resetLinks.length) {
+    return;
+  }
+
+  resetLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      try {
+        window.localStorage.removeItem('agentka_cookie_consent');
+      } catch (error) {
+        /* Ignore storage failures. */
+      }
+
+      if (typeof window.agentkaShowCookieBanner === 'function') {
+        window.agentkaShowCookieBanner();
+      }
+    });
+  });
+}
+
 function initCookieBanner() {
   const banner = document.querySelector('[data-cookie-banner]');
   if (!banner) return;
@@ -62,6 +85,7 @@ function initCookieBanner() {
   const acceptButton = banner.querySelector('[data-cookie-accept]');
   const rejectButton = banner.querySelector('[data-cookie-reject]');
   const saveButton = banner.querySelector('[data-cookie-save]');
+  const details = banner.querySelector('.cookie-banner__details');
   const categoryInputs = Array.prototype.slice.call(banner.querySelectorAll('[data-cookie-category]'));
   const defaults = parseCookieDefaults(banner.getAttribute('data-cookie-defaults'));
   const storageKey = 'agentka_cookie_consent';
@@ -152,6 +176,9 @@ function initCookieBanner() {
   const showBanner = () => {
     banner.hidden = false;
     banner.setAttribute('aria-hidden', 'false');
+    if (details) {
+      details.open = false;
+    }
     applyCookiePreferences(readCookieConsent() || defaults);
   };
 
@@ -185,6 +212,8 @@ function initCookieBanner() {
       hideBanner();
     });
   }
+
+  window.agentkaShowCookieBanner = showBanner;
 }
 
 function initRevealOnScroll() {

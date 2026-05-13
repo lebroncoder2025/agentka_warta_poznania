@@ -348,6 +348,7 @@
       <nav class="footer-nav">
         <a href="polityka-prywatnosci.html">Prywatność</a>
         <a href="polityka-cookies.html">Cookies</a>
+        <a href="#" data-cookie-reset>Cofnij zgodę cookies</a>
         <a href="#top">Wróć na górę</a>
       </nav>
     </div>
@@ -363,18 +364,21 @@
           <a href="polityka-prywatnosci.html">Polityka prywatności</a>
           <a href="polityka-cookies.html">Polityka cookies</a>
         </div>
-        <div class="cookie-banner__settings" aria-label="Ustawienia cookies">
-          <div class="cookie-banner__settings-head">
-            <p class="cookie-banner__settings-title">Ustawienia cookies</p>
-            <p class="cookie-banner__settings-note">Niezbędne są zawsze włączone. Pozostałe kategorie możesz zaznaczyć lub odznaczyć.</p>
+        <details class="cookie-banner__details">
+          <summary class="cookie-banner__summary">Zmień ustawienia cookies</summary>
+          <div class="cookie-banner__settings" aria-label="Ustawienia cookies">
+            <div class="cookie-banner__settings-head">
+              <p class="cookie-banner__settings-title">Ustawienia cookies</p>
+              <p class="cookie-banner__settings-note">Niezbędne są zawsze włączone. Pozostałe kategorie możesz zaznaczyć lub odznaczyć.</p>
+            </div>
+            <div class="cookie-banner__choices">
+              <label class="cookie-banner__choice is-required"><input type="checkbox" checked disabled data-cookie-category="essential"> Niezbędne</label>
+              <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="functional"> Funkcjonalne</label>
+              <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="analytics"> Analityczne</label>
+              <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="marketing"> Marketingowe</label>
+            </div>
           </div>
-          <div class="cookie-banner__choices">
-            <label class="cookie-banner__choice is-required"><input type="checkbox" checked disabled data-cookie-category="essential"> Niezbędne</label>
-            <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="functional"> Funkcjonalne</label>
-            <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="analytics"> Analityczne</label>
-            <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="marketing"> Marketingowe</label>
-          </div>
-        </div>
+        </details>
       </div>
       <div class="cookie-banner__actions">
         <button type="button" class="button outline" data-cookie-reject>Odrzuć</button>
