@@ -86,6 +86,9 @@
 
     var calendar;
     var selectedSlotId = null;
+  var selectedDateKey = null;
+  var mobileCalendarEl = null;
+  var isMobileCalendar = window.matchMedia && window.matchMedia('(max-width: 720px)').matches;
 
     /* ── Lookup maps ── */
     var slotsByDate    = {};
@@ -104,6 +107,102 @@
       }).format(new Date(dateKey + 'T12:00:00'));
     }
 
+    function formatMobileDateLabel(dateKey) {
+      return new Intl.DateTimeFormat('pl-PL', {
+        weekday: 'short', day: 'numeric', month: 'short'
+      }).format(new Date(dateKey + 'T12:00:00'));
+    }
+
+    function formatMobileMonthLabel(dateKey) {
+      return new Intl.DateTimeFormat('pl-PL', {
+        month: 'long', year: 'numeric'
+      }).format(new Date(dateKey + 'T12:00:00'));
+    }
+
+    function getSortedDateKeys() {
+      return Object.keys(slotsByDate).sort();
+    }
+
+    function updateMobileSelection(dateKey) {
+      if (!mobileCalendarEl) { return; }
+
+      mobileCalendarEl.querySelectorAll('.agentka-mobile-day').forEach(function (button) {
+        var isActive = button.getAttribute('data-date-key') === dateKey;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+
+    function chooseDate(dateKey) {
+      selectedDateKey = dateKey;
+      renderSlotList(dateKey);
+      updateMobileSelection(dateKey);
+    }
+
+    function renderMobileCalendar() {
+      var dateKeys = getSortedDateKeys();
+      var monthSections = [];
+      var currentMonthKey = null;
+
+      calendarEl.classList.add('is-mobile-calendar');
+      calendarEl.innerHTML = '';
+
+      mobileCalendarEl = document.createElement('div');
+      mobileCalendarEl.className = 'agentka-mobile-calendar';
+
+      var intro = document.createElement('div');
+      intro.className = 'agentka-mobile-calendar-head';
+      intro.innerHTML =
+        '<p class="agentka-kicker">Kalendarz terminów</p>' +
+        '<h3>Wybierz dzień z listy</h3>' +
+        '<p>Na telefonie pokazuję prostą listę zamiast gęstego miesiąca.</p>';
+      mobileCalendarEl.appendChild(intro);
+
+      dateKeys.forEach(function (dateKey) {
+        var date = new Date(dateKey + 'T12:00:00');
+        var monthKey = date.getFullYear() + '-' + pad(date.getMonth() + 1);
+        var avail = availableCounts[dateKey] || 0;
+
+        if (monthKey !== currentMonthKey) {
+          currentMonthKey = monthKey;
+
+          var section = document.createElement('section');
+          section.className = 'agentka-mobile-month';
+          section.innerHTML = '<p class="agentka-mobile-month-label">' + formatMobileMonthLabel(dateKey) + '</p>';
+
+          var list = document.createElement('div');
+          list.className = 'agentka-mobile-day-list';
+          section.appendChild(list);
+          monthSections.push({ section: section, list: list });
+        }
+
+        var currentList = monthSections[monthSections.length - 1].list;
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'agentka-mobile-day' + (avail ? '' : ' is-empty');
+        button.setAttribute('data-date-key', dateKey);
+        button.setAttribute('aria-pressed', 'false');
+        button.innerHTML =
+          '<span class="agentka-mobile-day-top">' +
+            '<span class="agentka-mobile-day-date">' + formatMobileDateLabel(dateKey) + '</span>' +
+            '<span class="agentka-mobile-day-count">' + (avail ? avail + ' wolne' : 'Brak terminów') + '</span>' +
+          '</span>' +
+          '<strong>' + (avail ? 'Dotknij, aby zobaczyć godziny' : 'Dzień bez wolnych slotów') + '</strong>';
+
+        button.addEventListener('click', function () {
+          chooseDate(dateKey);
+        });
+
+        currentList.appendChild(button);
+      });
+
+      monthSections.forEach(function (entry) {
+        mobileCalendarEl.appendChild(entry.section);
+      });
+
+      calendarEl.appendChild(mobileCalendarEl);
+    }
+
     DEMO_SLOTS.forEach(function (slot) {
       var dk = slot.date_key;
       if (!slotsByDate[dk]) { slotsByDate[dk] = []; }
@@ -115,6 +214,7 @@
     });
 
     if (!firstDate) { firstDate = toDateKey(new Date()); }
+    selectedDateKey = firstDate;
 
     /* ── Day cell annotation (mirrors annotateDayCells in public.js) ── */
     function annotateDayCells(info) {
@@ -184,40 +284,44 @@
     }
 
     /* ── Create FullCalendar instance (1:1 with createCalendar() in public.js) ── */
-    calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      locale: 'pl',
-      firstDay: 1,           /* Monday first — standard PL calendar */
-      height: 'auto',
-      expandRows: false,
-      fixedWeekCount: false,
-      headerToolbar: {
-        left:   'prev,next today',
-        center: 'title',
-        right:  ''
-      },
-      selectable: true,
-      navLinks: false,
-      /* No events array — exactly like the WP plugin.
-         Available days are marked via dayCellDidMount badges only. */
-      dayCellDidMount: annotateDayCells,
-      dateClick: function (info) {
-        /* Highlight selected day */
-        document.querySelectorAll('.fc-daygrid-day.is-selected').forEach(function (el) {
-          el.classList.remove('is-selected');
-        });
-        if (info.dayEl) { info.dayEl.classList.add('is-selected'); }
+    if (isMobileCalendar) {
+      renderMobileCalendar();
+      chooseDate(firstDate);
+    } else {
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pl',
+        firstDay: 1,           /* Monday first — standard PL calendar */
+        height: 'auto',
+        expandRows: false,
+        fixedWeekCount: false,
+        headerToolbar: {
+          left:   'prev,next today',
+          center: 'title',
+          right:  ''
+        },
+        selectable: true,
+        navLinks: false,
+        /* No events array — exactly like the WP plugin.
+           Available days are marked via dayCellDidMount badges only. */
+        dayCellDidMount: annotateDayCells,
+        dateClick: function (info) {
+          /* Highlight selected day */
+          document.querySelectorAll('.fc-daygrid-day.is-selected').forEach(function (el) {
+            el.classList.remove('is-selected');
+          });
+          if (info.dayEl) { info.dayEl.classList.add('is-selected'); }
 
-        renderSlotList(info.dateStr);
-        calendar.gotoDate(info.dateStr);
-      }
-    });
+          chooseDate(info.dateStr);
+        }
+      });
 
-    calendar.render();
+      calendar.render();
 
-    /* Auto-select first available day */
-    calendar.gotoDate(firstDate);
-    renderSlotList(firstDate);
+      /* Auto-select first available day */
+      calendar.gotoDate(firstDate);
+      chooseDate(firstDate);
+    }
 
     /* ── Reset button ── */
     if (resetBtn) {
@@ -228,9 +332,15 @@
         if (slotListEl)   { slotListEl.innerHTML = '<p class="agentka-slot-empty">Wybierz dzień z kalendarza, aby zobaczyć godziny.</p>'; }
         if (panelEl)      { panelEl.classList.add('is-hidden'); }
         selectedSlotId = null;
+        selectedDateKey = firstDate;
         document.querySelectorAll('.fc-daygrid-day.is-selected').forEach(function (el) {
           el.classList.remove('is-selected');
         });
+        updateMobileSelection(firstDate);
+        if (calendar && !isMobileCalendar) {
+          calendar.gotoDate(firstDate);
+        }
+        chooseDate(firstDate);
       });
     }
 
