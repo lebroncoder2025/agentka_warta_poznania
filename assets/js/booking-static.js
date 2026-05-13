@@ -86,9 +86,12 @@
 
     var calendar;
     var selectedSlotId = null;
-  var selectedDateKey = null;
-  var mobileCalendarEl = null;
-  var isMobileCalendar = window.matchMedia && window.matchMedia('(max-width: 720px)').matches;
+    var selectedDateKey = null;
+    var selectedMonthKey = null;
+    var mobileCalendarEl = null;
+    var mobileMonthSelectEl = null;
+    var mobileWeeksEl = null;
+    var isMobileCalendar = window.matchMedia && window.matchMedia('(max-width: 720px)').matches;
 
     /* ── Lookup maps ── */
     var slotsByDate    = {};
@@ -123,6 +126,67 @@
       return Object.keys(slotsByDate).sort();
     }
 
+    function getMonthKey(dateKey) {
+      return String(dateKey || '').slice(0, 7);
+    }
+
+    function getMonthKeys() {
+      var months = [];
+      getSortedDateKeys().forEach(function (dateKey) {
+        var monthKey = getMonthKey(dateKey);
+        if (months.indexOf(monthKey) === -1) {
+          months.push(monthKey);
+        }
+      });
+      return months;
+    }
+
+    function getMonthDates(monthKey) {
+      return getSortedDateKeys().filter(function (dateKey) {
+        return getMonthKey(dateKey) === monthKey;
+      });
+    }
+
+    function formatMonthChoiceLabel(monthKey) {
+      return new Intl.DateTimeFormat('pl-PL', {
+        month: 'long',
+        year: 'numeric'
+      }).format(new Date(monthKey + '-01T12:00:00'));
+    }
+
+    function formatWeekRangeLabel(startKey, endKey) {
+      var formatter = new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'short' });
+      return formatter.format(new Date(startKey + 'T12:00:00')) + ' – ' + formatter.format(new Date(endKey + 'T12:00:00'));
+    }
+
+    function getWeekGroups(dateKeys) {
+      var groups = [];
+      var lookup = {};
+
+      dateKeys.forEach(function (dateKey) {
+        var date = new Date(dateKey + 'T12:00:00');
+        var dow = date.getDay();
+        var shift = dow === 0 ? -6 : 1 - dow;
+        var weekStart = new Date(date);
+        weekStart.setDate(date.getDate() + shift);
+        var startKey = toDateKey(weekStart);
+
+        if (!lookup[startKey]) {
+          lookup[startKey] = {
+            startKey: startKey,
+            endKey: dateKey,
+            dates: []
+          };
+          groups.push(lookup[startKey]);
+        }
+
+        lookup[startKey].dates.push(dateKey);
+        lookup[startKey].endKey = dateKey;
+      });
+
+      return groups;
+    }
+
     function updateMobileSelection(dateKey) {
       if (!mobileCalendarEl) { return; }
 
@@ -137,12 +201,21 @@
       selectedDateKey = dateKey;
       renderSlotList(dateKey);
       updateMobileSelection(dateKey);
+
+      if (isMobileCalendar) {
+        var nextMonthKey = getMonthKey(dateKey);
+        if (nextMonthKey && nextMonthKey !== selectedMonthKey) {
+          selectedMonthKey = nextMonthKey;
+          if (mobileMonthSelectEl) {
+            mobileMonthSelectEl.value = nextMonthKey;
+          }
+          renderMobileWeeks();
+        }
+      }
     }
 
     function renderMobileCalendar() {
-      var dateKeys = getSortedDateKeys();
-      var monthSections = [];
-      var currentMonthKey = null;
+      var monthKeys = getMonthKeys();
 
       calendarEl.classList.add('is-mobile-calendar');
       calendarEl.innerHTML = '';
@@ -154,53 +227,122 @@
       intro.className = 'agentka-mobile-calendar-head';
       intro.innerHTML =
         '<p class="agentka-kicker">Kalendarz terminów</p>' +
-        '<h3>Wybierz dzień z listy</h3>' +
-        '<p>Na telefonie pokazuję prostą listę zamiast gęstego miesiąca.</p>';
+        '<h3>Wybierz miesiąc i tydzień</h3>' +
+        '<p>Na telefonie pokazuję miesiącami i tygodniami, żeby lista terminów nie rosła bez końca.</p>';
       mobileCalendarEl.appendChild(intro);
 
-      dateKeys.forEach(function (dateKey) {
-        var date = new Date(dateKey + 'T12:00:00');
-        var monthKey = date.getFullYear() + '-' + pad(date.getMonth() + 1);
-        var avail = availableCounts[dateKey] || 0;
+      calendarEl.appendChild(mobileCalendarEl);
+      var controls = document.createElement('div');
+      controls.className = 'agentka-mobile-calendar-controls';
 
-        if (monthKey !== currentMonthKey) {
-          currentMonthKey = monthKey;
+      var monthLabel = document.createElement('label');
+      monthLabel.className = 'agentka-mobile-month-picker';
+      monthLabel.innerHTML = '<span>Miesiąc</span>';
 
-          var section = document.createElement('section');
-          section.className = 'agentka-mobile-month';
-          section.innerHTML = '<p class="agentka-mobile-month-label">' + formatMobileMonthLabel(dateKey) + '</p>';
+      mobileMonthSelectEl = document.createElement('select');
+      mobileMonthSelectEl.className = 'agentka-mobile-month-select';
+      monthKeys.forEach(function (monthKey) {
+        var option = document.createElement('option');
+        option.value = monthKey;
+        option.textContent = formatMonthChoiceLabel(monthKey);
+        mobileMonthSelectEl.appendChild(option);
+      });
 
-          var list = document.createElement('div');
-          list.className = 'agentka-mobile-day-list';
-          section.appendChild(list);
-          monthSections.push({ section: section, list: list });
+      if (!selectedMonthKey || monthKeys.indexOf(selectedMonthKey) === -1) {
+        selectedMonthKey = getMonthKey(selectedDateKey || firstDate || monthKeys[0] || toDateKey(new Date()));
+      }
+
+      mobileMonthSelectEl.value = selectedMonthKey;
+      mobileMonthSelectEl.addEventListener('change', function () {
+        selectedMonthKey = mobileMonthSelectEl.value;
+        renderMobileWeeks();
+        var monthDates = getMonthDates(selectedMonthKey);
+        if (!monthDates.length) {
+          return;
         }
 
-        var currentList = monthSections[monthSections.length - 1].list;
-        var button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'agentka-mobile-day' + (avail ? '' : ' is-empty');
-        button.setAttribute('data-date-key', dateKey);
-        button.setAttribute('aria-pressed', 'false');
-        button.innerHTML =
-          '<span class="agentka-mobile-day-top">' +
-            '<span class="agentka-mobile-day-date">' + formatMobileDateLabel(dateKey) + '</span>' +
-            '<span class="agentka-mobile-day-count">' + (avail ? avail + ' wolne' : 'Brak terminów') + '</span>' +
-          '</span>' +
-          '<strong>' + (avail ? 'Dotknij, aby zobaczyć godziny' : 'Dzień bez wolnych slotów') + '</strong>';
+        if (monthDates.indexOf(selectedDateKey) === -1) {
+          var firstAvailable = monthDates.find(function (dateKey) {
+            return (availableCounts[dateKey] || 0) > 0;
+          }) || monthDates[0];
+          if (firstAvailable) {
+            chooseDate(firstAvailable);
+          }
+        }
+      });
 
-        button.addEventListener('click', function () {
-          chooseDate(dateKey);
+      monthLabel.appendChild(mobileMonthSelectEl);
+      controls.appendChild(monthLabel);
+      var tip = document.createElement('p');
+      tip.textContent = 'Przewiń tygodnie albo zmień miesiąc.';
+      controls.appendChild(tip);
+      mobileCalendarEl.appendChild(controls);
+
+      mobileWeeksEl = document.createElement('div');
+      mobileWeeksEl.className = 'agentka-mobile-weeks';
+      mobileCalendarEl.appendChild(mobileWeeksEl);
+
+      renderMobileWeeks();
+    }
+
+    function renderMobileWeeks() {
+      if (!mobileWeeksEl) {
+        return;
+      }
+
+      var dateKeys = getMonthDates(selectedMonthKey || getMonthKey(selectedDateKey || firstDate || ''));
+      var weekGroups = getWeekGroups(dateKeys);
+
+      mobileWeeksEl.innerHTML = '';
+
+      if (!dateKeys.length) {
+        mobileWeeksEl.innerHTML = '<p class="agentka-mobile-empty">Brak terminów w tym miesiącu.</p>';
+        return;
+      }
+
+      weekGroups.forEach(function (weekGroup) {
+        var section = document.createElement('section');
+        section.className = 'agentka-mobile-week';
+
+        var availableCount = weekGroup.dates.reduce(function (count, dateKey) {
+          return count + (availableCounts[dateKey] || 0);
+        }, 0);
+
+        section.innerHTML =
+          '<div class="agentka-mobile-week-head">' +
+            '<p class="agentka-mobile-week-label">' + formatWeekRangeLabel(weekGroup.startKey, weekGroup.endKey) + '</p>' +
+            '<span class="agentka-mobile-week-count">' + availableCount + ' wolne</span>' +
+          '</div>';
+
+        var list = document.createElement('div');
+        list.className = 'agentka-mobile-week-days';
+
+        weekGroup.dates.forEach(function (dateKey) {
+          var avail = availableCounts[dateKey] || 0;
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'agentka-mobile-day' + (avail ? '' : ' is-empty');
+          button.setAttribute('data-date-key', dateKey);
+          button.setAttribute('aria-pressed', 'false');
+          button.innerHTML =
+            '<span class="agentka-mobile-day-top">' +
+              '<span class="agentka-mobile-day-date">' + formatMobileDateLabel(dateKey) + '</span>' +
+              '<span class="agentka-mobile-day-count">' + (avail ? avail + ' wolne' : 'Brak terminów') + '</span>' +
+            '</span>' +
+            '<strong>' + (avail ? 'Dotknij, aby zobaczyć godziny' : 'Dzień bez wolnych slotów') + '</strong>';
+
+          button.addEventListener('click', function () {
+            chooseDate(dateKey);
+          });
+
+          list.appendChild(button);
         });
 
-        currentList.appendChild(button);
+        section.appendChild(list);
+        mobileWeeksEl.appendChild(section);
       });
 
-      monthSections.forEach(function (entry) {
-        mobileCalendarEl.appendChild(entry.section);
-      });
-
-      calendarEl.appendChild(mobileCalendarEl);
+      updateMobileSelection(selectedDateKey);
     }
 
     DEMO_SLOTS.forEach(function (slot) {

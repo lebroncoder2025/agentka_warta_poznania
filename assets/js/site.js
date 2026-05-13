@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initRevealOnScroll();
   initGalleryLightbox();
+  initCookieBanner();
   initBookingDemo();
 });
 
@@ -41,12 +42,149 @@ function initSmoothScroll() {
     link.addEventListener('click', (event) => {
       const hash = link.getAttribute('href');
       if (!hash || hash === '#') return;
+      if (hash === '#top') {
+        event.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
       const target = document.querySelector(hash);
       if (!target) return;
       event.preventDefault();
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
+}
+
+function initCookieBanner() {
+  const banner = document.querySelector('[data-cookie-banner]');
+  if (!banner) return;
+
+  const acceptButton = banner.querySelector('[data-cookie-accept]');
+  const rejectButton = banner.querySelector('[data-cookie-reject]');
+  const saveButton = banner.querySelector('[data-cookie-save]');
+  const categoryInputs = Array.prototype.slice.call(banner.querySelectorAll('[data-cookie-category]'));
+  const defaults = parseCookieDefaults(banner.getAttribute('data-cookie-defaults'));
+  const storageKey = 'agentka_cookie_consent';
+
+  function parseCookieDefaults(serialized) {
+    if (!serialized) {
+      return { essential: true, functional: false, analytics: false, marketing: false };
+    }
+
+    try {
+      return Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, JSON.parse(serialized));
+    } catch (error) {
+      return { essential: true, functional: false, analytics: false, marketing: false };
+    }
+  }
+
+  function readCookieConsent() {
+    try {
+      const rawValue = window.localStorage.getItem(storageKey);
+      if (!rawValue) {
+        return null;
+      }
+
+      if (rawValue === 'accepted') {
+        return { essential: true, functional: true, analytics: true, marketing: true };
+      }
+
+      if (rawValue === 'rejected') {
+        return { essential: true, functional: false, analytics: false, marketing: false };
+      }
+
+      const parsed = JSON.parse(rawValue);
+      if (parsed && parsed.categories) {
+        return Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, parsed.categories);
+      }
+    } catch (error) {
+      return null;
+    }
+
+    return null;
+  }
+
+  function writeCookieConsent(categories, mode) {
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify({
+        mode,
+        categories: Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, categories),
+      }));
+    } catch (error) {
+      /* Ignore storage failures. */
+    }
+  }
+
+  function applyCookiePreferences(categories) {
+    categoryInputs.forEach((input) => {
+      const category = input.dataset.cookieCategory;
+      if (!category || category === 'essential') {
+        return;
+      }
+
+      input.checked = Boolean(categories && categories[category]);
+    });
+  }
+
+  function collectCookiePreferences() {
+    const categories = {
+      essential: true,
+      functional: false,
+      analytics: false,
+      marketing: false,
+    };
+
+    categoryInputs.forEach((input) => {
+      const category = input.dataset.cookieCategory;
+      if (category && category !== 'essential') {
+        categories[category] = input.checked;
+      }
+    });
+
+    return categories;
+  }
+
+  const hideBanner = () => {
+    banner.hidden = true;
+    banner.setAttribute('aria-hidden', 'true');
+  };
+
+  const showBanner = () => {
+    banner.hidden = false;
+    banner.setAttribute('aria-hidden', 'false');
+    applyCookiePreferences(readCookieConsent() || defaults);
+  };
+
+  try {
+    if (!readCookieConsent()) {
+      showBanner();
+    } else {
+      hideBanner();
+    }
+  } catch (error) {
+    showBanner();
+  }
+
+  if (acceptButton) {
+    acceptButton.addEventListener('click', () => {
+      writeCookieConsent({ essential: true, functional: true, analytics: true, marketing: true }, 'accepted');
+      hideBanner();
+    });
+  }
+
+  if (rejectButton) {
+    rejectButton.addEventListener('click', () => {
+      writeCookieConsent({ essential: true, functional: false, analytics: false, marketing: false }, 'rejected');
+      hideBanner();
+    });
+  }
+
+  if (saveButton) {
+    saveButton.addEventListener('click', () => {
+      writeCookieConsent(collectCookiePreferences(), 'custom');
+      hideBanner();
+    });
+  }
 }
 
 function initRevealOnScroll() {

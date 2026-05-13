@@ -295,6 +295,88 @@
 	line-height: 1.55;
 }
 
+.agentka-mobile-calendar-controls {
+	display: grid;
+	gap: 12px;
+	padding: 4px 0 2px;
+}
+
+.agentka-mobile-month-picker {
+	display: grid;
+	gap: 8px;
+	font-weight: 800;
+	color: #083d47;
+}
+
+.agentka-mobile-month-select {
+	width: 100%;
+	min-height: 48px;
+	padding: 0 14px;
+	border-radius: 16px;
+	border: 1px solid rgba(13, 92, 99, 0.16);
+	background: #fff;
+	color: #083d47;
+	font: inherit;
+	font-weight: 700;
+}
+
+.agentka-mobile-calendar-controls p {
+	margin: 0;
+	color: #60707e;
+	line-height: 1.55;
+}
+
+.agentka-mobile-weeks {
+	display: grid;
+	gap: 14px;
+	max-height: min(58vh, 640px);
+	overflow-y: auto;
+	padding-right: 2px;
+}
+
+.agentka-mobile-week {
+	display: grid;
+	gap: 10px;
+	padding: 14px;
+	border: 1px solid rgba(13, 92, 99, 0.12);
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.82);
+	box-shadow: 0 10px 20px rgba(13, 92, 99, 0.05);
+}
+
+.agentka-mobile-week-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.agentka-mobile-week-label {
+	margin: 0;
+	font-size: 0.82rem;
+	font-weight: 900;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #0d5c63;
+}
+
+.agentka-mobile-week-count {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: rgba(13, 92, 99, 0.1);
+	color: #0d5c63;
+	font-size: 0.76rem;
+	font-weight: 800;
+	white-space: nowrap;
+}
+
+.agentka-mobile-week-days {
+	display: grid;
+	gap: 10px;
+}
+
 .agentka-mobile-month {
 	display: grid;
 	gap: 10px;
@@ -388,6 +470,15 @@
 .agentka-mobile-day.is-empty .agentka-mobile-day-count {
 	background: rgba(96, 112, 126, 0.12);
 	color: #60707e;
+}
+
+.agentka-mobile-empty {
+	margin: 0;
+	padding: 14px 16px;
+	border-radius: 18px;
+	background: rgba(96, 112, 126, 0.08);
+	color: #60707e;
+	font-weight: 700;
 }
 
 .agentka-booking-sidebar {
