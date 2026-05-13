@@ -941,6 +941,52 @@ p {
   }
 }
 
+/* ══════════════════════════════════════════
+   HAMBURGER TOGGLE
+══════════════════════════════════════════ */
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin-left: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--primary-deep);
+  transition: transform 240ms ease, opacity 240ms ease;
+  transform-origin: center;
+}
+
+.nav-open .nav-toggle span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-open .nav-toggle span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav-open .nav-toggle span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — 1180px
+══════════════════════════════════════════ */
+
 @media (max-width: 1180px) {
   .services-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -951,22 +997,11 @@ p {
   }
 }
 
+/* ══════════════════════════════════════════
+   RESPONSIVE — 980px (tablet)
+══════════════════════════════════════════ */
+
 @media (max-width: 980px) {
-  .header-inner {
-    flex-wrap: wrap;
-    padding: 14px 0;
-  }
-
-  .site-nav {
-    order: 3;
-    width: 100%;
-    padding-top: 4px;
-  }
-
-  .header-cta {
-    margin-left: auto;
-  }
-
   .hero-grid,
   .section-band-grid,
   .booking-grid,
@@ -988,16 +1023,86 @@ p {
   }
 }
 
+/* ══════════════════════════════════════════
+   RESPONSIVE — 768px (hamburger trigger)
+══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Header layout */
+  .header-inner {
+    padding: 12px 0;
+    gap: 12px;
+  }
+
+  .header-cta {
+    margin-left: auto;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  /* Nav hidden by default; shown when .nav-open is on <header> */
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 49;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px 0 14px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255, 250, 244, 0.97);
+    backdrop-filter: blur(18px);
+    overflow-x: visible;
+    white-space: normal;
+  }
+
+  .nav-open .site-nav {
+    display: flex;
+  }
+
+  .site-nav a {
+    padding: 14px 24px;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(13, 92, 99, 0.06);
+  }
+
+  .site-nav a:last-child {
+    border-bottom: 0;
+  }
+
+  .site-nav a::after {
+    display: none;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+  }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — 720px (small tablet / large phone)
+══════════════════════════════════════════ */
+
 @media (max-width: 720px) {
   .container {
     width: min(var(--container), calc(100% - 28px));
   }
 
   .section-pad {
-    padding: 34px 0;
+    padding: 36px 0;
   }
 
   h1 {
+    max-width: 100%;
+  }
+
+  h2 {
     max-width: 100%;
   }
 
@@ -1008,24 +1113,13 @@ p {
   }
 
   .services-grid,
-  .reviews-grid,
-  .gallery-grid {
+  .reviews-grid {
     grid-template-columns: 1fr;
   }
 
-  .calendar-grid,
-  .calendar-weekdays {
-    gap: 6px;
-  }
-
-  .calendar-weekdays span {
-    padding: 2px 4px;
-    font-size: 0.66rem;
-  }
-
-  .calendar-day {
-    min-height: 96px;
-    padding: 10px;
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .footer-inner {
@@ -1034,7 +1128,32 @@ p {
   }
 }
 
+/* ══════════════════════════════════════════
+   RESPONSIVE — 520px (phone)
+══════════════════════════════════════════ */
+
 @media (max-width: 520px) {
+  h1 {
+    font-size: clamp(2.1rem, 10vw, 3.2rem);
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: clamp(1.7rem, 7.5vw, 2.5rem);
+  }
+
+  .section-pad {
+    padding: 28px 0;
+  }
+
+  .section-heading {
+    margin-bottom: 20px;
+  }
+
+  .hero-photo-card img {
+    height: 240px;
+  }
+
   .hero-chips {
     flex-direction: column;
     align-items: stretch;
@@ -1042,13 +1161,18 @@ p {
 
   .hero-chips span {
     width: 100%;
+    text-align: center;
   }
 
-  .hero-photo-card img {
-    height: 340px;
+  .hero-actions {
+    flex-direction: column;
   }
 
-  .booking-widget,
+  .hero-actions .button {
+    width: 100%;
+    text-align: center;
+  }
+
   .service,
   .review,
   .contact-card,
@@ -1059,16 +1183,39 @@ p {
     padding-right: 16px;
   }
 
-  .calendar-grid {
-    gap: 5px;
+  .service {
+    padding: 18px 16px;
   }
 
-  .calendar-day {
-    min-height: 82px;
-    padding: 8px;
+  .review {
+    padding: 18px 16px;
   }
 
-  .day-slots {
+  .section-band-grid {
+    border-radius: var(--radius-sm);
+    padding: 18px 16px;
+  }
+
+  .footer-inner {
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — 420px (very small phone)
+══════════════════════════════════════════ */
+
+@media (max-width: 420px) {
+  .header-cta {
     display: none;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item {
+    min-height: 180px;
   }
 }

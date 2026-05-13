@@ -1,9 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
+  initMobileNav();
   initSmoothScroll();
   initRevealOnScroll();
   initGalleryLightbox();
   initBookingDemo();
 });
+
+function initMobileNav() {
+  const toggle = document.getElementById('nav-toggle');
+  const header = document.querySelector('.site-header');
+  const nav = document.getElementById('site-nav');
+  if (!toggle || !header || !nav) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = header.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.setAttribute('aria-label', isOpen ? 'Zamknij menu' : 'Otwórz menu');
+  });
+
+  /* Close nav when a link is clicked */
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      header.classList.remove('nav-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Otwórz menu');
+    });
+  });
+
+  /* Close on outside click */
+  document.addEventListener('click', (e) => {
+    if (!header.contains(e.target)) {
+      header.classList.remove('nav-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
 
 function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach((link) => {

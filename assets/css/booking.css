@@ -523,5 +523,32 @@
 		align-items: flex-start;
 		flex-direction: column;
 	}
+
+	.agentka-booking-steps {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 520px) {
+	.agentka-booking-intro {
+		padding: 16px;
+	}
+
+	.agentka-booking-intro h3 {
+		font-size: 1.15rem;
+	}
+
+	.agentka-booking-panel {
+		padding: 16px;
+	}
+
+	#agentka-calendar {
+		padding: 8px 6px;
+	}
+
+	.agentka-summary-card,
+	.agentka-slots-card {
+		padding: 14px;
+	}
 }
 
