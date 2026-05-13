@@ -59,57 +59,94 @@ function initMobileNav() {
   });
 }
 
-// ── Tabs ─────────────────────────────────────────────────────────────────────
+// ── Page navigation (full-page view switching) ───────────────────────────────
 function initTabs() {
-  var tabLinks = Array.prototype.slice.call(document.querySelectorAll('[data-tab]'));
-  var panes = Array.prototype.slice.call(document.querySelectorAll('[data-tab-pane]'));
-  var tabLinkBtns = Array.prototype.slice.call(document.querySelectorAll('[data-tab-link]'));
-  var tabContentEl = document.querySelector('.tab-content');
-  if (!tabLinks.length || !panes.length) return;
+  var navLinks   = Array.prototype.slice.call(document.querySelectorAll('[data-tab]'));
+  var ctaLinks   = Array.prototype.slice.call(document.querySelectorAll('[data-tab-link], [data-view-link]'));
+  var pageViews  = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
+  if (!pageViews.length) return;
 
-  function activateTab(tabId) {
-    tabLinks.forEach(function (link) {
-      link.classList.toggle('is-active', link.dataset.tab === tabId);
-    });
-    panes.forEach(function (pane) {
-      pane.classList.toggle('is-active', pane.dataset.tabPane === tabId);
-    });
-    history.replaceState(null, '', '#' + tabId);
-    // close mobile nav
+  var pageHeader      = document.getElementById('page-header');
+  var pageHeaderTitle = document.getElementById('page-header-title');
+  var viewTitles = {
+    oferta: 'Oferta', opinie: 'Opinie', galeria: 'Galeria',
+    faq: 'FAQ', rezerwacja: 'Rezerwacja', kontakt: 'Kontakt'
+  };
+
+  function closeMobileNav() {
     var header = document.querySelector('.site-header');
     var toggle = document.getElementById('nav-toggle');
     if (header) header.classList.remove('nav-open');
-    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Otwórz menu'); }
+    if (toggle) {
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Otwórz menu');
+    }
   }
 
-  tabLinks.forEach(function (link) {
+  function activateView(viewId) {
+    // Update nav active state
+    navLinks.forEach(function (link) {
+      link.classList.toggle('is-active', link.dataset.tab === viewId);
+    });
+
+    // Show / hide page views
+    pageViews.forEach(function (view) {
+      view.classList.toggle('is-active', view.dataset.view === viewId);
+    });
+
+    // Breadcrumb bar — show on sub-pages, hide on home
+    if (pageHeader) {
+      if (viewId === 'home') {
+        pageHeader.hidden = true;
+      } else {
+        pageHeader.hidden = false;
+        if (pageHeaderTitle) pageHeaderTitle.textContent = viewTitles[viewId] || viewId;
+      }
+    }
+
+    // Scroll to top of page instantly
+    window.scrollTo(0, 0);
+
+    // Update URL hash (clean path for home)
+    history.replaceState(null, '', viewId === 'home' ? location.pathname : '#' + viewId);
+
+    // Close mobile nav
+    closeMobileNav();
+
+    // Trigger reveal animations for elements now entering the viewport
+    setTimeout(function () {
+      for (var i = 0; i < pageViews.length; i++) {
+        if (pageViews[i].dataset.view === viewId) {
+          Array.prototype.forEach.call(
+            pageViews[i].querySelectorAll('.reveal:not(.in-view)'),
+            function (el) { el.classList.add('in-view'); }
+          );
+          break;
+        }
+      }
+    }, 80);
+  }
+
+  // Nav links (data-tab)
+  navLinks.forEach(function (link) {
     link.addEventListener('click', function (e) {
       e.preventDefault();
-      activateTab(link.dataset.tab);
-      if (tabContentEl) {
-        var rect = tabContentEl.getBoundingClientRect();
-        if (rect.top < 60) tabContentEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      activateView(link.dataset.tab);
     });
   });
 
-  tabLinkBtns.forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
+  // CTA / home links (data-tab-link, data-view-link)
+  ctaLinks.forEach(function (link) {
+    link.addEventListener('click', function (e) {
       e.preventDefault();
-      activateTab(btn.dataset.tabLink);
-      if (tabContentEl) {
-        setTimeout(function () {
-          tabContentEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 50);
-      }
+      activateView(link.dataset.tabLink || link.dataset.viewLink);
     });
   });
 
-  // initialise from hash or default to first tab
+  // Initialise from URL hash, or default to home
   var hash = location.hash.slice(1);
-  var validTabs = tabLinks.map(function (l) { return l.dataset.tab; });
-  var initTab = validTabs.indexOf(hash) !== -1 ? hash : validTabs[0];
-  if (initTab) activateTab(initTab);
+  var validViews = pageViews.map(function (v) { return v.dataset.view; });
+  activateView(validViews.indexOf(hash) !== -1 ? hash : 'home');
 }
 
 // ── Reveal on scroll ─────────────────────────────────────────────────────────
