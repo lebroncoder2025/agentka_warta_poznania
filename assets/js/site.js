@@ -168,14 +168,18 @@ function initCookieBanner() {
     return categories;
   }
 
+  const setBannerVisibility = (isVisible) => {
+    banner.hidden = !isVisible;
+    banner.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+    document.body.classList.toggle('has-cookie-banner', isVisible);
+  };
+
   const hideBanner = () => {
-    banner.hidden = true;
-    banner.setAttribute('aria-hidden', 'true');
+    setBannerVisibility(false);
   };
 
   const showBanner = () => {
-    banner.hidden = false;
-    banner.setAttribute('aria-hidden', 'false');
+    setBannerVisibility(true);
     if (details) {
       details.open = false;
     }
