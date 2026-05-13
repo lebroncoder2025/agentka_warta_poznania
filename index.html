@@ -3,36 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agentka Warta Poznania — Ubezpieczenia i rezerwacja online</title>
-  <meta name="description" content="Agentka Warta Poznania — statyczna wersja strony prezentacyjnej z ofertą ubezpieczeń, galerią, FAQ i podglądem kalendarza rezerwacji.">
+  <title>Agentka Warta Poznania — Patrycja Rożek · Ubezpieczenia</title>
+  <meta name="description" content="Patrycja Rożek — agentka ubezpieczeniowa Warta w Poznaniu. OC/AC, ubezpieczenia domu i firmy. Szybka rezerwacja konsultacji online.">
   <meta name="theme-color" content="#0d5c63">
-  <meta property="og:title" content="Agentka Warta Poznania — Ubezpieczenia i rezerwacja online">
-  <meta property="og:description" content="Statyczna wersja strony prezentacyjnej przygotowana na podstawie motywu WordPress.">
+  <meta property="og:title" content="Agentka Warta Poznania — Patrycja Rożek">
+  <meta property="og:description" content="Ubezpieczenia Warta w Poznaniu — indywidualne podejście, szybki kontakt, pełna obsługa po sprzedaży.">
   <meta property="og:image" content="assets/photos/photo-targeo.jpg">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=6">
-  <link rel="stylesheet" href="assets/css/booking.css?v=6">
+  <link rel="stylesheet" href="assets/css/style.css?v=7">
+  <link rel="stylesheet" href="assets/css/booking.css?v=7">
 </head>
-<body id="top">
+<body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#top" aria-label="Agentka Warta Poznania">
+      <a class="brand" href="index.html" aria-label="Agentka Warta Poznania — strona główna">
         <span class="brand-top">Agentka</span>
         <strong>Warta</strong>
         <span class="brand-muted">Poznania</span>
       </a>
       <nav class="site-nav" id="site-nav" aria-label="Główne">
-        <a href="#services">Oferta</a>
-        <a href="#reviews">Standard obsługi</a>
-        <a href="#gallery">Galeria</a>
-        <a href="#faq">FAQ</a>
-        <a href="#booking">Kalendarz</a>
-        <a href="#contact">Kontakt</a>
+        <a href="#oferta" data-tab="oferta">Oferta</a>
+        <a href="#opinie" data-tab="opinie">Opinie</a>
+        <a href="#galeria" data-tab="galeria">Galeria</a>
+        <a href="#faq" data-tab="faq">FAQ</a>
+        <a href="#rezerwacja" data-tab="rezerwacja">Rezerwacja</a>
+        <a href="#kontakt" data-tab="kontakt">Kontakt</a>
       </nav>
-      <a class="button primary header-cta" href="#booking">Umów termin</a>
+      <a class="button primary header-cta" href="#rezerwacja" data-tab-link="rezerwacja">Umów termin</a>
       <button class="nav-toggle" id="nav-toggle" aria-label="Otwórz menu" aria-expanded="false" aria-controls="site-nav">
         <span></span><span></span><span></span>
       </button>
@@ -43,369 +43,417 @@
     <section class="hero section-pad">
       <div class="container hero-grid">
         <div class="hero-copy reveal">
-          <p class="eyebrow">Agentka Warta Poznania | Ubezpieczenia dla klientów indywidualnych i firm</p>
-          <h1>Ubezpieczenia Warta w Poznaniu z szybkim kontaktem i rezerwacją online.</h1>
-          <p class="subtitle">Strona jest nastawiona na realną obsługę klienta: czytelna oferta, szybki kontakt, wygodna rezerwacja terminu i porządek w dalszej obsłudze.</p>
+          <p class="eyebrow">Agentka Warta Poznania · Ubezpieczenia dla klientów i firm</p>
+          <h1>Ubezpieczenia Warta w Poznaniu — szybki kontakt i pełna obsługa.</h1>
+          <p class="subtitle">Indywidualne doradztwo, dopasowana polisa i stały kontakt po sprzedaży. Bez anonimowej infolinii — jedna agentka przez cały czas umowy.</p>
 
           <div class="hero-meta-grid">
             <article class="meta-chip">
-              <span>Ocena / pozycjonowanie</span>
-              <strong>Dopasowana konsultacja</strong>
+              <span>Zakres obsługi</span>
+              <strong>OC/AC, dom, firma, komunikacyjne</strong>
             </article>
             <article class="meta-chip">
-              <span>Model współpracy</span>
-              <strong>Terminy online i kontakt bezpośredni</strong>
+              <span>Konsultacja</span>
+              <strong>Stacjonarnie w Poznaniu lub online</strong>
             </article>
           </div>
 
-          <div class="hero-chips" aria-label="Najważniejsze obszary">
+          <div class="hero-chips" aria-label="Kluczowe cechy">
             <span>OC / AC i pakiety komunikacyjne</span>
             <span>Ubezpieczenia majątkowe i firmowe</span>
-            <span>Kalendarz terminów dla klientów</span>
+            <span>Szybka rezerwacja terminu online</span>
           </div>
 
           <div class="hero-actions">
-            <a class="button primary" href="#booking">Umów termin</a>
-            <a class="button outline" href="https://maps.google.com/?q=Wichrowa%201A%2C%2060-449%20Pozna%C5%84%2C%20Polska" target="_blank" rel="noopener">Otwórz mapę</a>
+            <a class="button primary" href="#rezerwacja" data-tab-link="rezerwacja">Umów termin</a>
+            <a class="button outline" href="#kontakt" data-tab-link="kontakt">Napisz lub zadzwoń</a>
           </div>
 
           <div class="hero-contact-strip card-soft">
             <article>
               <span class="chip-label">Telefon</span>
-              <a href="tel:+48618644741">+48 61 864 47 41</a>
+              <a href="tel:+48665359534">+48 665 359 534</a>
             </article>
             <article>
-              <span class="chip-label">Adres</span>
-              <p>Wichrowa 1A, 60-449 Poznań, Polska</p>
+              <span class="chip-label">Biuro</span>
+              <p>Wichrowa 1A, 60-449 Poznań</p>
             </article>
           </div>
         </div>
 
         <div class="hero-visual reveal">
           <div class="hero-photo-card">
-            <img src="assets/photos/photo-targeo.jpg" alt="Zdjęcie biura" loading="eager">
+            <img src="assets/photos/photo-targeo.jpg" alt="Biuro Agentki Warta Poznania — Wichrowa 1A, Poznań" loading="eager">
           </div>
           <div class="hero-note card-soft">
-            <p class="chip-label">Co dostaje klient</p>
+            <p class="chip-label">Co zyska klient</p>
             <ul class="hero-checklist">
               <li>konkretną rekomendację zakresu ochrony</li>
-              <li>rezerwację spotkania bez dzwonienia</li>
-              <li>jedno miejsce kontaktu do polis i zmian</li>
+              <li>rezerwację terminu online bez dzwonienia</li>
+              <li>stały kontakt po zakupie polisy</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section-band section-pad reveal">
-      <div class="container section-band-grid card-soft">
-        <article>
-          <p class="chip-label">Podejście</p>
-          <h2>Strona gotowa do pracy z klientem, nie tylko do pokazania numeru telefonu.</h2>
-        </article>
-        <article>
-          <p>Tu klient od razu widzi zakres usług, łapie kontakt, sprawdza wolne terminy i zostawia rezerwację. Z panelu WordPress możesz potem sterować dostępnością i treściami bez dotykania kodu.</p>
-        </article>
-      </div>
-    </section>
+    <div class="tab-content">
 
-    <section id="services" class="section-pad reveal">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Oferta</p>
-          <h2>Najważniejsze obszary ochrony</h2>
-          <p class="section-copy">Układ strony jest zrobiony jak landing sprzedażowy: szybko komunikuje zakres usług i prowadzi użytkownika do rezerwacji lub kontaktu.</p>
-        </div>
+      <!-- TAB: Oferta -->
+      <div class="tab-pane" data-tab-pane="oferta">
+        <section class="section-pad">
+          <div class="container">
+            <div class="section-heading">
+              <p class="eyebrow">Oferta</p>
+              <h2>Główne obszary ubezpieczeń</h2>
+              <p class="section-copy">Obsługuję klientów indywidualnych i firmy z Poznania i okolic. Jeśli szukasz czegoś spoza listy — zadzwoń, znajdziemy rozwiązanie.</p>
+            </div>
 
-        <div class="services-grid">
-          <article class="service card">
-            <h3>OC / AC</h3>
-            <p>Porównanie wariantów, analiza zakresu, dopasowanie pakietu do auta i sposobu użytkowania.</p>
-          </article>
-          <article class="service card">
-            <h3>Dom i mieszkanie</h3>
-            <p>Ochrona nieruchomości, wyposażenia, ruchomości i odpowiedzialności cywilnej w życiu prywatnym.</p>
-          </article>
-          <article class="service card">
-            <h3>Firma i działalność</h3>
-            <p>Polisy majątkowe, odpowiedzialność, flotowe i rozwiązania dla lokalnych przedsiębiorców.</p>
-          </article>
-          <article class="service card">
-            <h3>Obsługa po sprzedaży</h3>
-            <p>Wsparcie przy zmianach, odnowieniach, dokumentach i zgłoszeniu szkody.</p>
-          </article>
-        </div>
+            <div class="services-grid">
+              <article class="service card">
+                <h3>OC / AC</h3>
+                <p>Analiza wariantów i dobór pakietu do Twojego auta, budżetu i sposobu użytkowania. Warta oferuje szeroki zakres ochrony komunikacyjnej.</p>
+              </article>
+              <article class="service card">
+                <h3>Dom i mieszkanie</h3>
+                <p>Ochrona murów, wyposażenia, ruchomości i OC w życiu prywatnym. Polisa dopasowana do powierzchni i wartości mienia.</p>
+              </article>
+              <article class="service card">
+                <h3>Firma i działalność</h3>
+                <p>Polisy majątkowe, OC działalności i flotowe dla firm. Szybka obsługa dla JDG i małych przedsiębiorstw z Poznania i okolic.</p>
+              </article>
+              <article class="service card">
+                <h3>Obsługa po sprzedaży</h3>
+                <p>Wsparcie przy zmianach, odnowieniach i zgłoszeniu szkody. Jeden numer kontaktowy przez cały czas trwania umowy.</p>
+              </article>
+            </div>
 
-        <div class="steps-grid">
-          <article class="step-card card-soft">
-            <span>1</span>
-            <h3>Wybierz termin</h3>
-            <p>Klient widzi realnie dostępne sloty w kalendarzu.</p>
-          </article>
-          <article class="step-card card-soft">
-            <span>2</span>
-            <h3>Wyślij dane</h3>
-            <p>Formularz zbiera kontakt i zapisuje rezerwację w WordPressie.</p>
-          </article>
-          <article class="step-card card-soft">
-            <span>3</span>
-            <h3>Obsłuż klienta</h3>
-            <p>Biuro i klient dostają potwierdzenie, więc proces jest domknięty.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="reviews" class="section-pad reveal">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Standard obsługi</p>
-          <h2>Standard obsługi i komunikacja z klientem</h2>
-          <p class="section-copy">Możesz pokazać realne opinie albo własne komunikaty budujące zaufanie. Na start sekcja korzysta z kart edytowalnych w panelu.</p>
-        </div>
-
-        <div class="reviews-grid">
-          <article class="review card">
-            <div class="review-meta"><strong>Konkret zamiast chaosu</strong><span>Profeska</span></div>
-            <p>Klient szybko przechodzi od wejścia na stronę do terminu spotkania. To jest układ pod konwersję, a nie przypadkowe przeglądanie.</p>
-          </article>
-          <article class="review card">
-            <div class="review-meta"><strong>Obsługa przed i po sprzedaży</strong><span>Profeska</span></div>
-            <p>Sekcje strony wspierają cały proces: od pierwszego kontaktu, przez wybór polisy, po późniejsze zmiany i odnowienia.</p>
-          </article>
-          <article class="review card">
-            <div class="review-meta"><strong>Gotowość do dalszej rozbudowy</strong><span>Profeska</span></div>
-            <p>Motyw i kalendarz można dalej rozszerzać o płatności, SMS-y, lead magnety albo synchronizację z zewnętrznym kalendarzem.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="gallery" class="section-pad reveal">
-      <div class="container">
-        <div class="section-heading compact">
-          <p class="eyebrow">Galeria</p>
-          <h2>Materiały, które wzmacniają wiarygodność wizytówki</h2>
-        </div>
-        <div class="gallery-grid">
-          <button class="gallery-item" type="button" data-gallery-src="assets/photos/photo-targeo.jpg" data-gallery-alt="Biuro i lokalizacja">
-            <img src="assets/photos/photo-targeo.jpg" alt="Biuro i lokalizacja" loading="lazy">
-          </button>
-          <button class="gallery-item" type="button" data-gallery-src="assets/photos/agnieszka.jpg" data-gallery-alt="Agentka i doradztwo">
-            <img src="assets/photos/agnieszka.jpg" alt="Agentka i doradztwo" loading="lazy">
-          </button>
-          <button class="gallery-item" type="button" data-gallery-src="assets/photos/logo-warta.png" data-gallery-alt="Logo Warta">
-            <img src="assets/photos/logo-warta.png" alt="Logo Warta" loading="lazy">
-          </button>
-          <button class="gallery-item" type="button" data-gallery-src="assets/photos/photo-targeo.jpg" data-gallery-alt="Biuro od frontu">
-            <img src="assets/photos/photo-targeo.jpg" alt="Biuro od frontu" loading="lazy">
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section id="faq" class="section-pad reveal">
-      <div class="container">
-        <div class="section-heading compact">
-          <p class="eyebrow">FAQ</p>
-          <h2>Najczęstsze pytania klientów</h2>
-        </div>
-        <div class="faq-list card">
-          <details class="faq-item">
-            <summary>Czy klient może sam wybrać termin konsultacji?</summary>
-            <p>Tak. Kalendarz pokazuje tylko sloty udostępnione z panelu WordPress.</p>
-          </details>
-          <details class="faq-item">
-            <summary>Czy terminy ustawisz bez programisty?</summary>
-            <p>Tak. Wtyczka działa w panelu WordPress i pozwala zarządzać dostępnością bez edycji kodu.</p>
-          </details>
-          <details class="faq-item">
-            <summary>Czy da się obsłużyć konsultacje online i stacjonarne?</summary>
-            <p>Tak. Na stronie możesz komunikować oba modele, a szczegóły dopinasz po rezerwacji.</p>
-          </details>
-          <details class="faq-item">
-            <summary>Czy klient dostaje potwierdzenie?</summary>
-            <p>Tak. Rezerwacja generuje wiadomość do biura i do klienta. Na razie logujemy ją lokalnie, bez prawdziwego SMTP.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section id="booking" class="section-pad reveal">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Rezerwacja online</p>
-          <h2>Kalendarz dla klientów osadzony bezpośrednio na stronie</h2>
-          <p class="section-copy">Z panelu WordPress ustawiasz dostępne terminy, a klient wybiera wolny slot i od razu zostawia dane kontaktowe.</p>
-        </div>
-
-        <div class="agentka-booking-widget">
-          <div class="agentka-booking-intro">
-            <p class="agentka-kicker">Rezerwacja wizyty</p>
-            <h3>Najpierw dzień i godzina, dopiero potem formularz</h3>
-            <p>Kalendarz pokazuje tylko terminy udostępnione przez biuro. Po kliknięciu dnia zobaczysz konkretne godziny, a po wyborze godziny formularz zapisze rezerwację.</p>
-            <div class="agentka-booking-steps">
-              <article><span>1</span><strong>Wybierz dzień</strong></article>
-              <article><span>2</span><strong>Kliknij godzinę</strong></article>
-              <article><span>3</span><strong>Wyślij formularz</strong></article>
+            <div class="steps-grid">
+              <article class="step-card card-soft">
+                <span>1</span>
+                <h3>Zarezerwuj termin</h3>
+                <p>Wybierz dostępny slot w kalendarzu. Bez dzwonienia i czekania w kolejce.</p>
+              </article>
+              <article class="step-card card-soft">
+                <span>2</span>
+                <h3>Porozmawiamy</h3>
+                <p>Omówimy zakres ochrony i wybierzemy polisę dopasowaną do Twoich potrzeb.</p>
+              </article>
+              <article class="step-card card-soft">
+                <span>3</span>
+                <h3>Otrzymujesz polisę</h3>
+                <p>Całą dokumentację obsłużę bezpośrednio. Stały kontakt przez cały czas umowy.</p>
+              </article>
             </div>
           </div>
+        </section>
+      </div>
 
-          <div class="agentka-booking-layout">
-            <div class="agentka-booking-main">
-              <div id="agentka-calendar"></div>
+      <!-- TAB: Opinie -->
+      <div class="tab-pane" data-tab-pane="opinie">
+        <section class="section-pad">
+          <div class="container">
+            <div class="section-heading">
+              <p class="eyebrow">Opinie klientów</p>
+              <h2>Co mówią klienci</h2>
+              <p class="section-copy">Priorytetem jest szybka, konkretna obsługa i obecność po sprzedaży — nie znikamy po podpisaniu polisy.</p>
             </div>
-            <aside class="agentka-booking-sidebar">
-              <section class="agentka-summary-card">
-                <p class="agentka-kicker">Wybrany dzień</p>
-                <strong id="agentka-selected-date-text">Wybierz dzień w kalendarzu</strong>
-                <p id="agentka-selected-date-meta" class="agentka-summary-meta">Pokażę tu listę dostępnych godzin dla wybranego dnia.</p>
-                <button type="button" id="agentka-reset-selection" class="agentka-reset-button">Wyczyść wybór</button>
-              </section>
-              <section class="agentka-slots-card">
-                <div class="agentka-slots-head">
-                  <h3>Dostępne godziny</h3>
-                  <span id="agentka-slot-count" class="agentka-slot-count">0</span>
+            <div class="reviews-grid">
+              <article class="review card">
+                <div class="review-meta">
+                  <strong>Szybka obsługa, konkretne doradztwo</strong>
+                  <div class="stars">★★★★★</div>
                 </div>
-                <div id="agentka-slot-list" class="agentka-slot-list">
-                  <p class="agentka-slot-empty">Wybierz dzień z kalendarza, aby zobaczyć godziny.</p>
+                <p>Pani Patrycja w kwadrans wyjaśniła mi różnice między pakietami OC/AC i doradziła optymalny zakres. Żadnego wciskania niepotrzebnych opcji. Zdecydowanie polecam.</p>
+                <footer class="review-footer"><span>Marek W.</span><span>Poznań</span></footer>
+              </article>
+              <article class="review card">
+                <div class="review-meta">
+                  <strong>Odnowiłam polisę bez wychodzenia z domu</strong>
+                  <div class="stars">★★★★★</div>
                 </div>
-              </section>
-              <div id="agentka-booking-panel" class="agentka-booking-panel is-hidden">
-                <div class="agentka-selected-slot">
-                  <span>Wybrany termin</span>
-                  <strong id="agentka-selected-slot-text">—</strong>
+                <p>Konsultacja online — szybko, sprawnie, bez zbędnych formalności. Najlepszy wariant ubezpieczenia domu dopasowany do naszej sytuacji. Polecam!</p>
+                <footer class="review-footer"><span>Agata K.</span><span>Mosina</span></footer>
+              </article>
+              <article class="review card">
+                <div class="review-meta">
+                  <strong>Polecam dla firm i JDG</strong>
+                  <div class="stars">★★★★★</div>
                 </div>
-                <form id="agentka-booking" class="agentka-booking-form">
-                  <div class="agentka-form-grid">
-                    <label><span>Imię i nazwisko</span><input name="name" placeholder="Jan Kowalski" required></label>
-                    <label><span>E-mail</span><input type="email" name="email" placeholder="jan@firma.pl" required></label>
-                    <label><span>Telefon</span><input name="phone" placeholder="+48 600 000 000" required></label>
-                    <label><span>Typ sprawy</span><input name="topic" placeholder="OC / AC, dom, firma"></label>
-                  </div>
-                  <label><span>Dodatkowe informacje</span><textarea name="message" rows="4" placeholder="Napisz krótko, czego dotyczy konsultacja."></textarea></label>
-                  <label class="agentka-consent"><input type="checkbox" name="consent" value="1" required><span>Potwierdzam, że mogę przekazać dane kontaktowe w celu obsługi rezerwacji.</span></label>
-                  <input type="hidden" name="slot_id">
-                  <div class="agentka-booking-actions">
-                    <button type="submit">Potwierdź rezerwację</button>
-                    <p id="agentka-booking-status" class="agentka-booking-status" role="status" aria-live="polite"></p>
-                  </div>
-                </form>
-              </div>
-            </aside>
+                <p>Obsługa polis flotowych i OC działalności w jednym miejscu. Zawsze dostępna i szybko reaguje — nawet po podpisaniu polisy. Nie zniknęła po sprzedaży.</p>
+                <footer class="review-footer"><span>Bartłomiej S.</span><span>Luboń</span></footer>
+              </article>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
-    </section>
 
-    <section id="contact" class="section-pad reveal">
-      <div class="container">
-        <div class="section-heading compact">
-          <p class="eyebrow">Kontakt</p>
-          <h2>Kontakt i dane do obsługi strony</h2>
-          <p class="section-copy">Możesz skontaktować się bezpośrednio, a w wersji WordPress zarządzać tymi danymi z panelu administracyjnego.</p>
-        </div>
+      <!-- TAB: Galeria -->
+      <div class="tab-pane" data-tab-pane="galeria">
+        <section class="section-pad">
+          <div class="container">
+            <div class="section-heading compact">
+              <p class="eyebrow">Galeria</p>
+              <h2>Biuro i lokalizacja</h2>
+            </div>
+            <div class="gallery-grid">
+              <button class="gallery-item" type="button" data-gallery-src="assets/photos/photo-targeo.jpg" data-gallery-alt="Okolica biura — Wichrowa 1A, Poznań">
+                <img src="assets/photos/photo-targeo.jpg" alt="Okolica biura — Wichrowa 1A, Poznań" loading="lazy">
+              </button>
+              <button class="gallery-item" type="button" data-gallery-src="assets/photos/logo-warta.png" data-gallery-alt="Logo Warta Ubezpieczenia">
+                <img src="assets/photos/logo-warta.png" alt="Logo Warta Ubezpieczenia" loading="lazy">
+              </button>
+              <button class="gallery-item" type="button" data-gallery-src="assets/photos/photo-targeo.jpg" data-gallery-alt="Biuro Agentki Warta Poznania">
+                <img src="assets/photos/photo-targeo.jpg" alt="Biuro Agentki Warta Poznania" loading="lazy">
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
 
-        <div class="contact-grid">
-          <article class="contact-card card">
-            <p class="chip-label">Biuro główne</p>
-            <h3>Agentka Warta Poznania</h3>
-            <a class="contact-link" href="tel:+48618644741">+48 61 864 47 41</a>
-            <p>Wichrowa 1A, 60-449 Poznań, Polska</p>
-            <a class="contact-link secondary-link" href="mailto:mimi017011@gmail.com">mimi017011@gmail.com</a>
-            <a class="contact-link secondary-link" href="https://warta.ubezpieczenie.com.pl" target="_blank" rel="noopener">warta.ubezpieczenie.com.pl</a>
-          </article>
+      <!-- TAB: FAQ -->
+      <div class="tab-pane" data-tab-pane="faq">
+        <section class="section-pad">
+          <div class="container">
+            <div class="section-heading compact">
+              <p class="eyebrow">FAQ</p>
+              <h2>Najczęstsze pytania</h2>
+            </div>
+            <div class="faq-list card">
+              <details class="faq-item">
+                <summary>Jak szybko mogę uzyskać ofertę OC/AC?</summary>
+                <p>Zazwyczaj na tej samej rozmowie. Wystarczy podać dane pojazdu — omówimy opcje w Warcie i powiem, co konkretnie się opłaca przy Twoim aucie i sposobie użytkowania.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Czy obsługujecie firmy i jednoosobowe działalności?</summary>
+                <p>Tak. Przygotowuję polisy majątkowe, OC działalności i flotowe dla firm oraz JDG z Poznania i okolic. Umów krótką konsultację — ocenimy zakres ochrony razem.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Czy po zakupie polisy mam stały kontakt?</summary>
+                <p>Tak. Jestem dostępna przez cały czas trwania umowy — przy zmianach w polisie, odnowieniach i zgłoszeniu szkody. Nie przekazuję klienta na infolinię.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Jakie ubezpieczenia domu i mieszkania oferujecie?</summary>
+                <p>Polisy majątkowe Warta — ochrona murów, wyposażenia, ruchomości i OC w życiu prywatnym. Zakres dopasowuję do powierzchni, wartości mienia i Twoich potrzeb.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Czy można umówić konsultację online?</summary>
+                <p>Tak. Spotkania prowadzę stacjonarnie (Wichrowa 1A, Poznań) i online przez telefon lub wideorozmowę. Wybierz termin w zakładce Rezerwacja.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Jak zgłosić szkodę z polisy Warta?</summary>
+                <p>Zadzwoń bezpośrednio do mnie — przeprowadzę Cię przez cały proces: dokumentacja, kontakt z rzeczoznawcą, śledzenie statusu. Masz jedną osobę do kontaktu przez cały czas.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+      </div>
 
-          <article class="contact-card card">
-            <p class="chip-label">Dodatkowe kontakty</p>
-            <div class="contacts-stack">
-              <div class="additional-contact card-soft">
-                <h4>Agnieszka Banaszczyk</h4>
-                <a href="tel:+48602240260">+48 602 240 260</a>
-                <a href="mailto:mimi017011@gmail.com">mimi017011@gmail.com</a>
-                <p>Os. Na Murawy 3c, 61-655 Poznań</p>
+      <!-- TAB: Rezerwacja -->
+      <div class="tab-pane" data-tab-pane="rezerwacja">
+        <section class="section-pad">
+          <div class="container">
+            <div class="section-heading">
+              <p class="eyebrow">Rezerwacja online</p>
+              <h2>Umów termin konsultacji</h2>
+              <p class="section-copy">Wybierz dostępny dzień i godzinę. Po wypełnieniu formularza potwierdzimy rezerwację przez telefon lub e-mail.</p>
+            </div>
+
+            <div class="agentka-booking-widget">
+              <div class="agentka-booking-intro">
+                <p class="agentka-kicker">Jak to działa</p>
+                <h3>Dzień, godzina, formularz — i gotowe</h3>
+                <p>Wybierz dzień z wolnymi slotami, kliknij godzinę i zostaw dane kontaktowe. Potwierdzimy termin i przypomnimy dzień przed spotkaniem.</p>
+                <div class="agentka-booking-steps">
+                  <article><span>1</span><strong>Wybierz dzień i godzinę</strong></article>
+                  <article><span>2</span><strong>Zostaw dane kontaktowe</strong></article>
+                  <article><span>3</span><strong>Czekaj na potwierdzenie</strong></article>
+                </div>
               </div>
-              <div class="additional-contact card-soft">
-                <h4>Patrycja Rożek</h4>
-                <a href="tel:+48665359534">+48 665 359 534</a>
-                <p>ul. Leśna 9, 62-005 Promnice</p>
+
+              <div class="agentka-booking-layout">
+                <div class="agentka-booking-main">
+                  <div id="agentka-calendar"></div>
+                </div>
+                <aside class="agentka-booking-sidebar">
+                  <section class="agentka-summary-card">
+                    <p class="agentka-kicker">Wybrany dzień</p>
+                    <strong id="agentka-selected-date-text">Wybierz dzień w kalendarzu</strong>
+                    <p id="agentka-selected-date-meta" class="agentka-summary-meta">Pokażę tu dostępne godziny dla wybranego dnia.</p>
+                    <button type="button" id="agentka-reset-selection" class="agentka-reset-button">Wyczyść wybór</button>
+                  </section>
+                  <section class="agentka-slots-card">
+                    <div class="agentka-slots-head">
+                      <h3>Dostępne godziny</h3>
+                      <span id="agentka-slot-count" class="agentka-slot-count">—</span>
+                    </div>
+                    <div id="agentka-slot-list" class="agentka-slot-list">
+                      <p class="agentka-slot-empty">Wybierz dzień z kalendarza, aby zobaczyć godziny.</p>
+                    </div>
+                  </section>
+                  <div id="agentka-booking-panel" class="agentka-booking-panel is-hidden">
+                    <div class="agentka-selected-slot">
+                      <span>Wybrany termin</span>
+                      <strong id="agentka-selected-slot-text">—</strong>
+                    </div>
+                    <form id="agentka-booking" class="agentka-booking-form">
+                      <div class="agentka-form-grid">
+                        <label><span>Imię i nazwisko</span><input name="name" placeholder="Jan Kowalski" required autocomplete="name"></label>
+                        <label><span>E-mail</span><input type="email" name="email" placeholder="jan@firma.pl" required autocomplete="email"></label>
+                        <label><span>Telefon</span><input name="phone" placeholder="+48 600 000 000" required autocomplete="tel"></label>
+                        <label><span>Czego dotyczy</span><input name="topic" placeholder="OC / AC, dom, firma…"></label>
+                      </div>
+                      <label><span>Dodatkowe informacje</span><textarea name="message" rows="3" placeholder="Krótko opisz sprawę — to przyspieszy konsultację."></textarea></label>
+                      <label class="agentka-consent"><input type="checkbox" name="consent" value="1" required><span>Wyrażam zgodę na przetwarzanie danych w celu obsługi rezerwacji zgodnie z <a href="polityka-prywatnosci.html">polityką prywatności</a>.</span></label>
+                      <input type="hidden" name="slot_id">
+                      <div class="agentka-booking-actions">
+                        <button type="submit">Potwierdź rezerwację</button>
+                        <p id="agentka-booking-status" class="agentka-booking-status" role="status" aria-live="polite"></p>
+                      </div>
+                    </form>
+                  </div>
+                </aside>
               </div>
             </div>
-          </article>
-        </div>
-
-        <div class="map-wrap card">
-          <iframe id="map-frame" src="https://www.google.com/maps?q=Wichrowa%201A%2C%2060-449%20Pozna%C5%84%2C%20Polska&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" aria-label="Mapa"></iframe>
-        </div>
+          </div>
+        </section>
       </div>
-    </section>
+
+      <!-- TAB: Kontakt -->
+      <div class="tab-pane" data-tab-pane="kontakt">
+        <section class="section-pad">
+          <div class="container">
+            <div class="section-heading compact">
+              <p class="eyebrow">Kontakt</p>
+              <h2>Zadzwoń, napisz lub wpadnij</h2>
+              <p class="section-copy">Odpowiadam na każde zapytanie. Konsultacja stacjonarnie lub online — jak wolisz.</p>
+            </div>
+
+            <div class="contact-grid">
+              <article class="contact-card card">
+                <p class="chip-label">Agentka</p>
+                <h3>Patrycja Rożek</h3>
+                <a class="contact-link" href="tel:+48665359534">+48 665 359 534</a>
+                <a class="contact-link secondary-link" href="mailto:mimi017011@gmail.com">mimi017011@gmail.com</a>
+                <div class="contact-detail">
+                  <span class="chip-label">Biuro</span>
+                  <p>Wichrowa 1A, 60-449 Poznań</p>
+                  <a class="button outline small" href="https://maps.google.com/?q=Wichrowa%201A%2C%2060-449%20Pozna%C5%84" target="_blank" rel="noopener" style="margin-top:10px;display:inline-flex">Otwórz w Mapach Google</a>
+                </div>
+              </article>
+              <article class="contact-card card">
+                <p class="chip-label">Godziny obsługi</p>
+                <h3>Dostępność</h3>
+                <dl class="hours-list">
+                  <div><dt>Pn – Pt</dt><dd>9:00 – 17:00</dd></div>
+                  <div><dt>Sobota</dt><dd>9:00 – 13:00</dd></div>
+                  <div><dt>Niedziela</dt><dd>nieczynne</dd></div>
+                </dl>
+                <p class="contact-note">Możesz zarezerwować termin online poza godzinami obsługi — skontaktuję się następnego dnia roboczego.</p>
+                <a class="button primary small" href="#rezerwacja" data-tab-link="rezerwacja" style="margin-top:12px;display:inline-flex">Zarezerwuj termin</a>
+              </article>
+            </div>
+
+            <div class="map-wrap card" id="map-container">
+              <div class="map-placeholder" id="map-placeholder">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/></svg>
+                <p>Wichrowa 1A, 60-449 Poznań</p>
+                <p class="map-placeholder__note">Mapa Google wczyta się po zaakceptowaniu cookies analitycznych.</p>
+                <button type="button" class="button small outline" id="map-accept-btn">Zaakceptuj cookies i pokaż mapę</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div><!-- .tab-content -->
 
   </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <small>© 2026 Agentka Warta Poznania — Wszystkie prawa zastrzeżone</small>
+      <small>© 2026 Agentka Warta Poznania — Patrycja Rożek — Wszelkie prawa zastrzeżone</small>
       <nav class="footer-nav">
         <a href="polityka-prywatnosci.html">Polityka prywatności</a>
         <a href="polityka-cookies.html">Polityka cookies</a>
-        <a href="#" data-cookie-reset>Cofnij zgodę cookies</a>
-        <a href="#top">Wróć na górę</a>
+        <button type="button" class="footer-link-btn" data-cookie-settings>Ustawienia cookies</button>
       </nav>
     </div>
   </footer>
 
-  <div class="cookie-banner" id="agentka-cookie-banner" data-cookie-banner data-cookie-defaults='{"essential":true,"functional":false,"analytics":false,"marketing":false}' hidden aria-hidden="true">
-    <div class="container cookie-banner__inner">
-      <div class="cookie-banner__copy">
-        <p class="eyebrow">Prywatność</p>
-        <h2>Szanujemy Twoją prywatność</h2>
-        <p>Używamy wyłącznie niezbędnych cookies do działania strony. Dodatkowe opcje włączysz tylko wtedy, gdy chcesz.</p>
-        <div class="cookie-banner__links">
-          <a href="polityka-prywatnosci.html">Polityka prywatności</a>
-          <a href="polityka-cookies.html">Polityka cookies</a>
-        </div>
-        <details class="cookie-banner__details">
-          <summary class="cookie-banner__summary"><span class="cookie-banner__summary-label">Dostosuj preferencje</span><span class="cookie-banner__summary-note">Niezbędne cookies są zawsze aktywne</span></summary>
-          <div class="cookie-banner__settings" aria-label="Ustawienia cookies">
-            <div class="cookie-banner__settings-head">
-              <p class="cookie-banner__settings-title">Ustawienia cookies</p>
-              <p class="cookie-banner__settings-note">Funkcjonalne, analityczne i marketingowe możesz włączyć tylko wtedy, gdy chcesz.</p>
-            </div>
-            <div class="cookie-banner__choices">
-              <label class="cookie-banner__choice is-required"><input type="checkbox" checked disabled data-cookie-category="essential"> Niezbędne</label>
-              <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="functional"> Funkcjonalne</label>
-              <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="analytics"> Analityczne</label>
-              <label class="cookie-banner__choice"><input type="checkbox" data-cookie-category="marketing"> Marketingowe</label>
-            </div>
-          </div>
-        </details>
-      </div>
-      <div class="cookie-banner__actions">
-        <button type="button" class="button outline" data-cookie-reject>Tylko niezbędne</button>
-        <button type="button" class="button outline" data-cookie-save>Zapisz preferencje</button>
-        <button type="button" class="button primary" data-cookie-accept>Akceptuj wszystko</button>
+  <!-- ── COOKIE BAR (slim) ── -->
+  <div class="cookie-bar" id="agentka-cookie-banner" data-cookie-banner hidden aria-hidden="true">
+    <div class="container cookie-bar__inner">
+      <p class="cookie-bar__text">Ta strona używa cookies. Mapa Google wczytuje się wyłącznie po Twojej zgodzie. <a href="polityka-cookies.html">Dowiedz się więcej</a></p>
+      <div class="cookie-bar__actions">
+        <button type="button" class="cookie-bar__settings-btn" data-cookie-settings>Ustawienia</button>
+        <button type="button" class="button small outline cookie-bar-btn" data-cookie-reject>Tylko niezbędne</button>
+        <button type="button" class="button small primary cookie-bar-btn" data-cookie-accept>Akceptuj wszystko</button>
       </div>
     </div>
   </div>
 
-  <div class="gallery-modal" id="gallery-modal" aria-hidden="true" hidden>
-    <button type="button" class="gallery-close" id="gallery-close" aria-label="Zamknij podgląd">×</button>
-    <img id="gallery-modal-image" alt="">
+  <!-- ── COOKIE SETTINGS MODAL ── -->
+  <div class="cookie-modal" id="cookie-settings-modal" hidden aria-modal="true" role="dialog" aria-labelledby="cookie-modal-title">
+    <div class="cookie-modal__backdrop" id="cookie-modal-backdrop"></div>
+    <div class="cookie-modal__box">
+      <div class="cookie-modal__head">
+        <h3 id="cookie-modal-title">Ustawienia prywatności</h3>
+        <button type="button" class="cookie-modal__close" id="cookie-modal-close" aria-label="Zamknij panel ustawień cookies">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 1l14 14M15 1L1 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <p>Wybierz, które pliki cookies akceptujesz. Niezbędne są zawsze aktywne.</p>
+      <div class="cookie-modal__choices">
+        <label class="cookie-modal__choice is-required">
+          <input type="checkbox" checked disabled data-cookie-category="essential">
+          <div><strong>Niezbędne</strong><span>Zapamiętywanie decyzji o zgodzie. Zawsze aktywne.</span></div>
+        </label>
+        <label class="cookie-modal__choice">
+          <input type="checkbox" data-cookie-category="analytics">
+          <div><strong>Analityczne</strong><span>Google Maps na stronie kontaktu (zbiera dane o sieci).</span></div>
+        </label>
+        <label class="cookie-modal__choice">
+          <input type="checkbox" data-cookie-category="functional">
+          <div><strong>Funkcjonalne</strong><span>Zapamiętywanie preferencji użytkownika.</span></div>
+        </label>
+        <label class="cookie-modal__choice">
+          <input type="checkbox" data-cookie-category="marketing">
+          <div><strong>Marketingowe</strong><span>Reklamy i kampanie. Wyłączone domyślnie.</span></div>
+        </label>
+      </div>
+      <div class="cookie-modal__actions">
+        <button type="button" class="button outline" data-cookie-reject>Tylko niezbędne</button>
+        <button type="button" class="button primary" data-cookie-save>Zapisz wybór</button>
+      </div>
+      <p class="cookie-modal__note">Zmień preferencje w dowolnym momencie przez „Ustawienia cookies” w stopce.</p>
+    </div>
+  </div>
+
+  <!-- ── GALLERY MODAL ── -->
+  <div class="gallery-modal" id="gallery-modal" hidden aria-modal="true" role="dialog" aria-label="Podgląd zdjęcia">
+    <button class="gallery-modal__close" id="gallery-close" aria-label="Zamknij galerię">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M1 1l18 18M19 1L1 19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <img id="gallery-modal-image" src="" alt="">
   </div>
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Agentka Warta Poznania",
-    "telephone": "+48 61 864 47 41",
+    "name": "Agentka Warta Poznania — Patrycja Rożek",
+    "telephone": "+48665359534",
     "email": "mimi017011@gmail.com",
-    "address": "Wichrowa 1A, 60-449 Poznań, Polska",
-    "url": "https://warta.ubezpieczenie.com.pl"
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Wichrowa 1A",
+      "addressLocality": "Poznań",
+      "postalCode": "60-449",
+      "addressCountry": "PL"
+    }
   }
   </script>
-  <script src="assets/vendor/fullcalendar/index.global.min.js"></script>
-  <script src="assets/js/booking-static.js"></script>
-  <script src="assets/js/site.js?v=6" defer></script>
+  <script src="assets/js/site.js?v=7" defer></script>
 </body>
 </html>

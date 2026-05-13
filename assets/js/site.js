@@ -1,36 +1,57 @@
-document.addEventListener('DOMContentLoaded', () => {
+// ── Cookie storage helpers (module-level) ────────────────────────────────────
+var COOKIE_STORAGE_KEY = 'agentka_cookie_consent';
+
+function readCookieConsent() {
+  try {
+    var raw = window.localStorage.getItem(COOKIE_STORAGE_KEY);
+    if (!raw) return null;
+    if (raw === 'accepted') return { essential: true, functional: true, analytics: true, marketing: true };
+    if (raw === 'rejected') return { essential: true, functional: false, analytics: false, marketing: false };
+    var parsed = JSON.parse(raw);
+    if (parsed && parsed.categories) {
+      return Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, parsed.categories);
+    }
+  } catch (e) { return null; }
+  return null;
+}
+
+function writeCookieConsent(categories, mode) {
+  try {
+    window.localStorage.setItem(COOKIE_STORAGE_KEY, JSON.stringify({
+      mode: mode || 'custom',
+      categories: Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, categories)
+    }));
+    document.dispatchEvent(new CustomEvent('agentka:consentUpdated'));
+  } catch (e) { /* ignore storage failures */ }
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
   initMobileNav();
-  initSmoothScroll();
+  initTabs();
   initRevealOnScroll();
   initGalleryLightbox();
-  initCookieResetLinks();
   initCookieBanner();
+  initCookieModal();
+  initCookieSettingsLinks();
+  initConditionalMap();
   initBookingDemo();
 });
 
+// ── Mobile nav ───────────────────────────────────────────────────────────────
 function initMobileNav() {
-  const toggle = document.getElementById('nav-toggle');
-  const header = document.querySelector('.site-header');
-  const nav = document.getElementById('site-nav');
+  var toggle = document.getElementById('nav-toggle');
+  var header = document.querySelector('.site-header');
+  var nav = document.getElementById('site-nav');
   if (!toggle || !header || !nav) return;
 
-  toggle.addEventListener('click', () => {
-    const isOpen = header.classList.toggle('nav-open');
+  toggle.addEventListener('click', function () {
+    var isOpen = header.classList.toggle('nav-open');
     toggle.setAttribute('aria-expanded', String(isOpen));
     toggle.setAttribute('aria-label', isOpen ? 'Zamknij menu' : 'Otwórz menu');
   });
 
-  /* Close nav when a link is clicked */
-  nav.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      header.classList.remove('nav-open');
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Otwórz menu');
-    });
-  });
-
-  /* Close on outside click */
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', function (e) {
     if (!header.contains(e.target)) {
       header.classList.remove('nav-open');
       toggle.setAttribute('aria-expanded', 'false');
@@ -38,406 +59,472 @@ function initMobileNav() {
   });
 }
 
-function initSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      const hash = link.getAttribute('href');
-      if (!hash || hash === '#') return;
-      if (hash === '#top') {
-        event.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
-      const target = document.querySelector(hash);
-      if (!target) return;
-      event.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  });
-}
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+function initTabs() {
+  var tabLinks = Array.prototype.slice.call(document.querySelectorAll('[data-tab]'));
+  var panes = Array.prototype.slice.call(document.querySelectorAll('[data-tab-pane]'));
+  var tabLinkBtns = Array.prototype.slice.call(document.querySelectorAll('[data-tab-link]'));
+  var tabContentEl = document.querySelector('.tab-content');
+  if (!tabLinks.length || !panes.length) return;
 
-function initCookieResetLinks() {
-  const resetLinks = Array.prototype.slice.call(document.querySelectorAll('[data-cookie-reset]'));
-  if (!resetLinks.length) {
-    return;
+  function activateTab(tabId) {
+    tabLinks.forEach(function (link) {
+      link.classList.toggle('is-active', link.dataset.tab === tabId);
+    });
+    panes.forEach(function (pane) {
+      pane.classList.toggle('is-active', pane.dataset.tabPane === tabId);
+    });
+    history.replaceState(null, '', '#' + tabId);
+    // close mobile nav
+    var header = document.querySelector('.site-header');
+    var toggle = document.getElementById('nav-toggle');
+    if (header) header.classList.remove('nav-open');
+    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Otwórz menu'); }
   }
 
-  resetLinks.forEach((link) => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      try {
-        window.localStorage.removeItem('agentka_cookie_consent');
-      } catch (error) {
-        /* Ignore storage failures. */
+  tabLinks.forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      activateTab(link.dataset.tab);
+      if (tabContentEl) {
+        var rect = tabContentEl.getBoundingClientRect();
+        if (rect.top < 60) tabContentEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    });
+  });
 
-      if (typeof window.agentkaShowCookieBanner === 'function') {
+  tabLinkBtns.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      activateTab(btn.dataset.tabLink);
+      if (tabContentEl) {
+        setTimeout(function () {
+          tabContentEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      }
+    });
+  });
+
+  // initialise from hash or default to first tab
+  var hash = location.hash.slice(1);
+  var validTabs = tabLinks.map(function (l) { return l.dataset.tab; });
+  var initTab = validTabs.indexOf(hash) !== -1 ? hash : validTabs[0];
+  if (initTab) activateTab(initTab);
+}
+
+// ── Reveal on scroll ─────────────────────────────────────────────────────────
+function initRevealOnScroll() {
+  var items = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if (!items.length) return;
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(function (el) { el.classList.add('in-view'); });
+    return;
+  }
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.10 });
+  items.forEach(function (el) { observer.observe(el); });
+}
+
+// ── Gallery lightbox ─────────────────────────────────────────────────────────
+function initGalleryLightbox() {
+  var modal = document.getElementById('gallery-modal');
+  var modalImg = document.getElementById('gallery-modal-image');
+  var closeBtn = document.getElementById('gallery-close');
+  if (!modal || !modalImg || !closeBtn) return;
+
+  function openModal(src, alt) {
+    modalImg.src = src;
+    modalImg.alt = alt || 'Podgląd zdjęcia';
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    modalImg.removeAttribute('src');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-gallery-src]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      openModal(btn.dataset.gallerySrc || '', btn.dataset.galleryAlt || '');
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+}
+
+// ── Cookie banner (slim bar) ──────────────────────────────────────────────────
+function initCookieBanner() {
+  var banner = document.querySelector('[data-cookie-banner]');
+  if (!banner) return;
+
+  var acceptBtn = banner.querySelector('[data-cookie-accept]');
+  var rejectBtn = banner.querySelector('[data-cookie-reject]');
+
+  function hideBanner() {
+    banner.hidden = true;
+    banner.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('has-cookie-banner');
+  }
+
+  function showBanner() {
+    banner.hidden = false;
+    banner.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('has-cookie-banner');
+  }
+
+  window.agentkaShowCookieBanner = showBanner;
+  window.agentkaHideCookieBanner = hideBanner;
+
+  if (!readCookieConsent()) showBanner();
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', function () {
+      writeCookieConsent({ essential: true, functional: true, analytics: true, marketing: true }, 'accepted');
+      hideBanner();
+    });
+  }
+  if (rejectBtn) {
+    rejectBtn.addEventListener('click', function () {
+      writeCookieConsent({ essential: true, functional: false, analytics: false, marketing: false }, 'rejected');
+      hideBanner();
+    });
+  }
+}
+
+// ── Cookie settings modal ─────────────────────────────────────────────────────
+function initCookieModal() {
+  var modal = document.getElementById('cookie-settings-modal');
+  if (!modal) return;
+
+  var closeBtn = document.getElementById('cookie-modal-close');
+  var backdrop = document.getElementById('cookie-modal-backdrop');
+  var categoryInputs = Array.prototype.slice.call(modal.querySelectorAll('[data-cookie-category]'));
+  var saveBtn = modal.querySelector('[data-cookie-save]');
+  var rejectBtn = modal.querySelector('[data-cookie-reject]');
+
+  function openModal() {
+    var consent = readCookieConsent() || { essential: true, functional: false, analytics: false, marketing: false };
+    categoryInputs.forEach(function (input) {
+      var cat = input.dataset.cookieCategory;
+      if (cat && cat !== 'essential') input.checked = Boolean(consent[cat]);
+    });
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  window.agentkaOpenCookieModal = openModal;
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (backdrop) backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function () {
+      var categories = { essential: true, functional: false, analytics: false, marketing: false };
+      categoryInputs.forEach(function (input) {
+        var cat = input.dataset.cookieCategory;
+        if (cat && cat !== 'essential') categories[cat] = input.checked;
+      });
+      writeCookieConsent(categories, 'custom');
+      closeModal();
+      if (typeof window.agentkaHideCookieBanner === 'function') window.agentkaHideCookieBanner();
+    });
+  }
+
+  if (rejectBtn) {
+    rejectBtn.addEventListener('click', function () {
+      writeCookieConsent({ essential: true, functional: false, analytics: false, marketing: false }, 'rejected');
+      closeModal();
+      if (typeof window.agentkaHideCookieBanner === 'function') window.agentkaHideCookieBanner();
+    });
+  }
+}
+
+// ── Cookie settings links ([data-cookie-settings]) ────────────────────────────
+function initCookieSettingsLinks() {
+  Array.prototype.slice.call(document.querySelectorAll('[data-cookie-settings]')).forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (typeof window.agentkaOpenCookieModal === 'function') {
+        window.agentkaOpenCookieModal();
+      } else if (typeof window.agentkaShowCookieBanner === 'function') {
         window.agentkaShowCookieBanner();
       }
     });
   });
 }
 
-function initCookieBanner() {
-  const banner = document.querySelector('[data-cookie-banner]');
-  if (!banner) return;
+// ── Conditional map ───────────────────────────────────────────────────────────
+function initConditionalMap() {
+  var container = document.getElementById('map-container');
+  var placeholder = document.getElementById('map-placeholder');
+  var acceptBtn = document.getElementById('map-accept-btn');
+  if (!container || !placeholder) return;
 
-  const acceptButton = banner.querySelector('[data-cookie-accept]');
-  const rejectButton = banner.querySelector('[data-cookie-reject]');
-  const saveButton = banner.querySelector('[data-cookie-save]');
-  const details = banner.querySelector('.cookie-banner__details');
-  const categoryInputs = Array.prototype.slice.call(banner.querySelectorAll('[data-cookie-category]'));
-  const defaults = parseCookieDefaults(banner.getAttribute('data-cookie-defaults'));
-  const storageKey = 'agentka_cookie_consent';
+  var MAP_SRC = 'https://www.google.com/maps?q=Wichrowa%201A%2C%2060-449%20Pozna%C5%84%2C%20Polska&output=embed';
 
-  function parseCookieDefaults(serialized) {
-    if (!serialized) {
-      return { essential: true, functional: false, analytics: false, marketing: false };
-    }
-
-    try {
-      return Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, JSON.parse(serialized));
-    } catch (error) {
-      return { essential: true, functional: false, analytics: false, marketing: false };
-    }
-  }
-
-  function readCookieConsent() {
-    try {
-      const rawValue = window.localStorage.getItem(storageKey);
-      if (!rawValue) {
-        return null;
+  function tryLoadMap() {
+    var consent = readCookieConsent();
+    if (consent && (consent.analytics || consent.functional)) {
+      if (!container.querySelector('iframe')) {
+        var iframe = document.createElement('iframe');
+        iframe.src = MAP_SRC;
+        iframe.loading = 'lazy';
+        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+        iframe.setAttribute('aria-label', 'Mapa lokalizacji biura — Wichrowa 1A, Poznań');
+        iframe.style.cssText = 'width:100%;height:100%;min-height:380px;border:0;display:block;';
+        placeholder.style.display = 'none';
+        container.appendChild(iframe);
       }
-
-      if (rawValue === 'accepted') {
-        return { essential: true, functional: true, analytics: true, marketing: true };
-      }
-
-      if (rawValue === 'rejected') {
-        return { essential: true, functional: false, analytics: false, marketing: false };
-      }
-
-      const parsed = JSON.parse(rawValue);
-      if (parsed && parsed.categories) {
-        return Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, parsed.categories);
-      }
-    } catch (error) {
-      return null;
-    }
-
-    return null;
-  }
-
-  function writeCookieConsent(categories, mode) {
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify({
-        mode,
-        categories: Object.assign({ essential: true, functional: false, analytics: false, marketing: false }, categories),
-      }));
-    } catch (error) {
-      /* Ignore storage failures. */
     }
   }
 
-  function applyCookiePreferences(categories) {
-    categoryInputs.forEach((input) => {
-      const category = input.dataset.cookieCategory;
-      if (!category || category === 'essential') {
-        return;
-      }
+  tryLoadMap();
+  document.addEventListener('agentka:consentUpdated', tryLoadMap);
 
-      input.checked = Boolean(categories && categories[category]);
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', function () {
+      writeCookieConsent({ essential: true, functional: true, analytics: true, marketing: false }, 'partial');
+      tryLoadMap();
+      if (typeof window.agentkaHideCookieBanner === 'function') window.agentkaHideCookieBanner();
     });
   }
-
-  function collectCookiePreferences() {
-    const categories = {
-      essential: true,
-      functional: false,
-      analytics: false,
-      marketing: false,
-    };
-
-    categoryInputs.forEach((input) => {
-      const category = input.dataset.cookieCategory;
-      if (category && category !== 'essential') {
-        categories[category] = input.checked;
-      }
-    });
-
-    return categories;
-  }
-
-  const setBannerVisibility = (isVisible) => {
-    banner.hidden = !isVisible;
-    banner.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
-    document.body.classList.toggle('has-cookie-banner', isVisible);
-  };
-
-  const hideBanner = () => {
-    setBannerVisibility(false);
-  };
-
-  const showBanner = () => {
-    setBannerVisibility(true);
-    if (details) {
-      details.open = false;
-    }
-    applyCookiePreferences(readCookieConsent() || defaults);
-  };
-
-  try {
-    if (!readCookieConsent()) {
-      showBanner();
-    } else {
-      hideBanner();
-    }
-  } catch (error) {
-    showBanner();
-  }
-
-  if (acceptButton) {
-    acceptButton.addEventListener('click', () => {
-      writeCookieConsent({ essential: true, functional: true, analytics: true, marketing: true }, 'accepted');
-      hideBanner();
-    });
-  }
-
-  if (rejectButton) {
-    rejectButton.addEventListener('click', () => {
-      writeCookieConsent({ essential: true, functional: false, analytics: false, marketing: false }, 'rejected');
-      hideBanner();
-    });
-  }
-
-  if (saveButton) {
-    saveButton.addEventListener('click', () => {
-      writeCookieConsent(collectCookiePreferences(), 'custom');
-      hideBanner();
-    });
-  }
-
-  window.agentkaShowCookieBanner = showBanner;
 }
 
-function initRevealOnScroll() {
-  const revealItems = document.querySelectorAll('.reveal');
-  if (!revealItems.length) return;
-
-  if (!('IntersectionObserver' in window)) {
-    revealItems.forEach((item) => item.classList.add('in-view'));
-    return;
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  revealItems.forEach((item) => observer.observe(item));
-}
-
-function initGalleryLightbox() {
-  const modal = document.getElementById('gallery-modal');
-  const modalImage = document.getElementById('gallery-modal-image');
-  const closeButton = document.getElementById('gallery-close');
-  if (!modal || !modalImage || !closeButton) return;
-
-  const openModal = (src, alt) => {
-    modalImage.src = src;
-    modalImage.alt = alt || 'Podgląd zdjęcia';
-    modal.hidden = false;
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeModal = () => {
-    modal.hidden = true;
-    modal.setAttribute('aria-hidden', 'true');
-    modalImage.removeAttribute('src');
-    document.body.style.overflow = '';
-  };
-
-  document.querySelectorAll('[data-gallery-src]').forEach((button) => {
-    button.addEventListener('click', () => {
-      openModal(button.dataset.gallerySrc || '', button.dataset.galleryAlt || 'Podgląd zdjęcia');
-    });
-  });
-
-  closeButton.addEventListener('click', closeModal);
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) {
-      closeModal();
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !modal.hidden) {
-      closeModal();
-    }
-  });
-}
-
+// ── Booking demo (custom calendar) ───────────────────────────────────────────
 function initBookingDemo() {
-  const calendarEl = document.getElementById('booking-calendar');
-  const dateLabelEl = document.getElementById('booking-date-label');
-  const dateNoteEl = document.getElementById('booking-date-note');
-  const slotListEl = document.getElementById('booking-slot-list');
-  const monthLabelEl = document.getElementById('booking-month-label');
+  var calEl = document.getElementById('agentka-calendar');
+  var dateTitleEl = document.getElementById('agentka-selected-date-text');
+  var dateMetaEl = document.getElementById('agentka-selected-date-meta');
+  var resetBtn = document.getElementById('agentka-reset-selection');
+  var slotListEl = document.getElementById('agentka-slot-list');
+  var slotCountEl = document.getElementById('agentka-slot-count');
+  var bookingPanel = document.getElementById('agentka-booking-panel');
+  var slotText = document.getElementById('agentka-selected-slot-text');
+  var bookingForm = document.getElementById('agentka-booking');
+  var bookingStatus = document.getElementById('agentka-booking-status');
+  if (!calEl) return;
 
-  if (!calendarEl || !dateLabelEl || !dateNoteEl || !slotListEl || !monthLabelEl) return;
-
-  const state = {
-    days: buildBookingDays(),
-    selectedKey: '2026-05-25',
-    selectedSlot: null,
+  // Slots by day-of-week (1=Mon … 5=Fri, 6=Sat)
+  var SLOTS_BY_DOW = {
+    1: ['09:00', '10:30', '14:00'],
+    2: ['09:00', '11:00', '12:30'],
+    3: ['09:30', '11:00', '13:30'],
+    4: ['10:00', '11:30', '15:00'],
+    5: ['09:00', '10:00'],
+    6: ['10:00', '12:00']
   };
 
-  monthLabelEl.textContent = 'maj 2026';
-  renderCalendar(calendarEl, state);
+  var state = {
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+    selectedDate: null,
+    selectedSlot: null
+  };
 
-  const initialDay = state.days.find((day) => day.key === state.selectedKey) || state.days.find((day) => day.available) || state.days[0];
-  if (initialDay) {
-    selectDay(initialDay.key, state, { calendarEl, dateLabelEl, dateNoteEl, slotListEl });
+  function getSlots(date) {
+    var dow = date.getDay();
+    var blocked = (date.getDate() % 11 === 0);
+    return (!blocked && SLOTS_BY_DOW[dow]) ? SLOTS_BY_DOW[dow] : [];
   }
 
-  calendarEl.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-date]');
-    if (!button) return;
-    selectDay(button.dataset.date, state, { calendarEl, dateLabelEl, dateNoteEl, slotListEl });
-  });
-}
+  function toKey(date) {
+    return date.getFullYear() + '-' +
+      String(date.getMonth() + 1).padStart(2, '0') + '-' +
+      String(date.getDate()).padStart(2, '0');
+  }
 
-function buildBookingDays() {
-  const days = [];
-  const start = new Date(2026, 3, 27); // 27 April 2026
-  const end = new Date(2026, 4, 31); // 31 May 2026
-  const patterns = [
-    ['09:00', '10:00', '11:30'],
-    ['09:30', '12:00', '14:00'],
-    ['10:00', '13:30', '15:00'],
-    ['08:30', '10:30', '12:30'],
-  ];
+  function formatDate(date) {
+    var s = date.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
 
-  let current = new Date(start);
-  let index = 0;
-  while (current <= end) {
-    const workingDay = current.getDay() >= 1 && current.getDay() <= 5;
-    const blocked = current.getDate() % 7 === 0;
-    const slots = workingDay && !blocked ? patterns[index % patterns.length] : [];
-    days.push({
-      key: toDateKey(current),
-      dayNumber: current.getDate(),
-      monthShort: current.toLocaleDateString('pl-PL', { month: 'short' }),
-      label: formatLongDate(current),
-      slots,
-      available: slots.length > 0,
+  function renderCal() {
+    var y = state.year, m = state.month;
+    var firstDay = new Date(y, m, 1);
+    var lastDay = new Date(y, m + 1, 0);
+    var startDow = (firstDay.getDay() + 6) % 7; // Mon=0
+    var monthName = firstDay.toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' });
+    monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+    calEl.innerHTML = '';
+
+    // Header
+    var header = document.createElement('div');
+    header.className = 'agentka-cal-header';
+    header.innerHTML =
+      '<button class="agentka-cal-nav" id="agentka-cal-prev" aria-label="Poprzedni miesiąc" type="button">&#8249;</button>' +
+      '<span class="agentka-cal-title">' + monthName + '</span>' +
+      '<button class="agentka-cal-nav" id="agentka-cal-next" aria-label="Następny miesiąc" type="button">&#8250;</button>';
+    calEl.appendChild(header);
+
+    // Weekday labels
+    var weekdays = document.createElement('div');
+    weekdays.className = 'agentka-cal-weekdays';
+    ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd'].forEach(function (d) {
+      var s = document.createElement('span'); s.textContent = d; weekdays.appendChild(s);
     });
-    current = addDays(current, 1);
-    index += 1;
-  }
+    calEl.appendChild(weekdays);
 
-  return days;
-}
+    // Day grid
+    var grid = document.createElement('div');
+    grid.className = 'agentka-cal-grid';
 
-function renderCalendar(calendarEl, state) {
-  calendarEl.innerHTML = '';
-  state.days.forEach((day) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'calendar-day';
-    button.dataset.date = day.key;
-    button.setAttribute('aria-label', day.label);
-    if (!day.available) {
-      button.classList.add('is-empty');
+    var todayStr = toKey(new Date());
+    var nowTs = new Date(); nowTs.setHours(0, 0, 0, 0);
+
+    // Empty leading cells
+    for (var i = 0; i < startDow; i++) {
+      var empty = document.createElement('div');
+      empty.className = 'agentka-cal-day is-empty';
+      grid.appendChild(empty);
     }
 
-    button.innerHTML = `
-      <div class="day-top">
-        <span class="day-number">${day.dayNumber}</span>
-        <span class="day-month">${day.monthShort}</span>
-      </div>
-      <strong>${day.available ? 'Dostępny' : 'Brak slotów'}</strong>
-      <div class="day-slots">
-        ${day.available ? day.slots.slice(0, 3).map((slot) => `<span>${slot}</span>`).join('') : '<span>—</span>'}
-      </div>
-    `;
+    for (var d = 1; d <= lastDay.getDate(); d++) {
+      var date = new Date(y, m, d);
+      var key = toKey(date);
+      var isPast = date < nowTs;
+      var slots = isPast ? [] : getSlots(date);
+      var isToday = key === todayStr;
+      var isSelected = key === state.selectedDate;
 
-    calendarEl.appendChild(button);
-  });
-}
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'agentka-cal-day' +
+        (slots.length ? ' is-available' : ' is-unavailable') +
+        (isToday ? ' is-today' : '') +
+        (isSelected ? ' is-selected' : '');
+      btn.dataset.date = key;
+      if (isPast || !slots.length) btn.disabled = true;
 
-function selectDay(key, state, targets) {
-  const day = state.days.find((item) => item.key === key);
-  if (!day) return;
+      var num = document.createElement('span');
+      num.className = 'agentka-cal-day-num';
+      num.textContent = String(d);
+      btn.appendChild(num);
 
-  state.selectedKey = key;
-  state.selectedSlot = day.available ? day.slots[0] : null;
+      if (slots.length) {
+        var badge = document.createElement('span');
+        badge.className = 'agentka-cal-day-badge';
+        badge.textContent = String(slots.length);
+        btn.appendChild(badge);
+      }
+      grid.appendChild(btn);
+    }
 
-  targets.calendarEl.querySelectorAll('[data-date]').forEach((button) => {
-    button.classList.toggle('is-selected', button.dataset.date === key);
-  });
+    calEl.appendChild(grid);
 
-  targets.dateLabelEl.textContent = day.label;
-  targets.dateNoteEl.textContent = day.available
-    ? 'Wybierz godzinę z listy obok, aby podświetlić termin.'
-    : 'W tym dniu nie ma wolnych godzin. Wybierz inny dzień.';
+    // Month navigation
+    var prevBtn = document.getElementById('agentka-cal-prev');
+    var nextBtn = document.getElementById('agentka-cal-next');
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function () {
+        if (state.month === 0) { state.month = 11; state.year--; } else { state.month--; }
+        renderCal();
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () {
+        if (state.month === 11) { state.month = 0; state.year++; } else { state.month++; }
+        renderCal();
+      });
+    }
 
-  renderSlots(day, state, targets.slotListEl, targets.dateNoteEl);
-}
-
-function renderSlots(day, state, slotListEl, dateNoteEl) {
-  slotListEl.innerHTML = '';
-
-  if (!day.available) {
-    const empty = document.createElement('span');
-    empty.className = 'slot-pill is-muted';
-    empty.textContent = 'Brak wolnych terminów';
-    slotListEl.appendChild(empty);
-    return;
+    // Day selection
+    grid.addEventListener('click', function (e) {
+      var btn2 = e.target.closest('[data-date]');
+      if (!btn2 || btn2.disabled) return;
+      state.selectedDate = btn2.dataset.date;
+      var d2 = new Date(btn2.dataset.date + 'T00:00:00');
+      renderCal();
+      showSlots(d2);
+    });
   }
 
-  day.slots.forEach((slot) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'slot-pill';
-    if (slot === state.selectedSlot) {
-      button.classList.add('is-active');
+  function showSlots(date) {
+    var slots = getSlots(date);
+    var label = formatDate(date);
+    if (dateTitleEl) dateTitleEl.textContent = label;
+    if (dateMetaEl) dateMetaEl.textContent = slots.length
+      ? 'Wybierz godzinę z listy poniżej.'
+      : 'Brak wolnych terminów. Wybierz inny dzień.';
+    if (slotCountEl) slotCountEl.textContent = String(slots.length);
+    if (!slotListEl) return;
+    slotListEl.innerHTML = '';
+
+    if (!slots.length) {
+      var emptyP = document.createElement('p');
+      emptyP.className = 'agentka-slot-empty';
+      emptyP.textContent = 'Brak wolnych terminów w tym dniu.';
+      slotListEl.appendChild(emptyP);
+      return;
     }
-    button.textContent = slot;
-    button.addEventListener('click', () => {
-      state.selectedSlot = slot;
-      slotListEl.querySelectorAll('.slot-pill').forEach((item) => item.classList.remove('is-active'));
-      button.classList.add('is-active');
-      dateNoteEl.textContent = `Wybrano godzinę ${slot} dla dnia ${day.label}.`;
+
+    slots.forEach(function (slot) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'agentka-slot-button';
+      btn.innerHTML = '<strong>' + slot + '</strong><span>wolny</span>';
+      btn.addEventListener('click', function () {
+        slotListEl.querySelectorAll('.agentka-slot-button').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        state.selectedSlot = slot;
+        if (slotText) slotText.textContent = formatDate(date) + ', ' + slot;
+        if (bookingPanel) {
+          bookingPanel.classList.remove('is-hidden');
+          var slotInput = bookingPanel.querySelector('[name="slot_id"]');
+          if (slotInput) slotInput.value = toKey(date) + 'T' + slot;
+        }
+      });
+      slotListEl.appendChild(btn);
     });
-    slotListEl.appendChild(button);
-  });
-}
+  }
 
-function addDays(date, amount) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + amount);
-  return next;
-}
+  function resetBooking() {
+    state.selectedDate = null;
+    state.selectedSlot = null;
+    if (dateTitleEl) dateTitleEl.textContent = 'Wybierz dzień w kalendarzu';
+    if (dateMetaEl) dateMetaEl.textContent = 'Pokażę tu dostępne godziny dla wybranego dnia.';
+    if (slotListEl) slotListEl.innerHTML = '<p class="agentka-slot-empty">Wybierz dzień z kalendarza, aby zobaczyć godziny.</p>';
+    if (slotCountEl) slotCountEl.textContent = '—';
+    if (bookingPanel) bookingPanel.classList.add('is-hidden');
+    renderCal();
+  }
 
-function toDateKey(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+  if (resetBtn) resetBtn.addEventListener('click', resetBooking);
 
-function formatLongDate(date) {
-  const value = date.toLocaleDateString('pl-PL', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-  return value.charAt(0).toUpperCase() + value.slice(1);
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (bookingStatus) {
+        bookingStatus.textContent = 'Rezerwacja przyjęta! Skontaktujemy się z potwierdzeniem w ciągu 24 godzin.';
+        bookingStatus.classList.remove('is-error');
+      }
+      setTimeout(function () {
+        bookingForm.reset();
+        if (bookingStatus) bookingStatus.textContent = '';
+        resetBooking();
+      }, 3500);
+    });
+  }
+
+  renderCal();
 }

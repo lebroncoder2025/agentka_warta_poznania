@@ -770,3 +770,147 @@
 	}
 }
 
+/* ── Custom calendar grid ────────────────────────────────────────────────── */
+#agentka-calendar {
+  padding: 16px;
+  background: #fff;
+  border-radius: 24px;
+  border: 1px solid rgba(13, 92, 99, 0.12);
+}
+
+.agentka-cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.agentka-cal-title {
+  font-weight: 800;
+  font-size: 1rem;
+  color: #083d47;
+}
+
+.agentka-cal-nav {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: #0d5c63;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agentka-cal-nav:hover {
+  background: rgba(13, 92, 99, 0.08);
+}
+
+.agentka-cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.agentka-cal-weekdays span {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #60707e;
+  padding: 4px 0;
+}
+
+.agentka-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.agentka-cal-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  min-height: 52px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.agentka-cal-day.is-empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.agentka-cal-day.is-unavailable {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.agentka-cal-day.is-available {
+  border-color: rgba(13, 92, 99, 0.12);
+  background: rgba(13, 92, 99, 0.04);
+}
+
+.agentka-cal-day.is-available:hover {
+  background: rgba(13, 92, 99, 0.1);
+  border-color: rgba(13, 92, 99, 0.24);
+}
+
+.agentka-cal-day.is-today .agentka-cal-day-num {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.agentka-cal-day.is-selected {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff;
+}
+
+.agentka-cal-day.is-selected .agentka-cal-day-num {
+  color: #fff;
+}
+
+.agentka-cal-day.is-selected .agentka-cal-day-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.agentka-cal-day-num {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1c2a37;
+  line-height: 1;
+}
+
+.agentka-cal-day-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: rgba(217, 138, 61, 0.15);
+  color: #8e5520;
+  border-radius: 999px;
+  padding: 2px 6px;
+}
+
+@media (max-width: 480px) {
+  .agentka-cal-day {
+    min-height: 42px;
+    padding: 4px 2px;
+  }
+
+  .agentka-cal-day-num {
+    font-size: 0.8rem;
+  }
+}

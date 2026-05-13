@@ -940,7 +940,7 @@ p {
 }
 
 body.has-cookie-banner {
-  padding-bottom: 280px;
+  padding-bottom: 74px;
 }
 
 .cookie-banner__inner {
@@ -1324,7 +1324,7 @@ body.has-cookie-banner {
   }
 
   body.has-cookie-banner {
-    padding-bottom: 380px;
+    padding-bottom: 74px;
   }
 
   .cookie-banner {
@@ -1499,7 +1499,7 @@ body.has-cookie-banner {
   }
 
   body.has-cookie-banner {
-    padding-bottom: 500px;
+    padding-bottom: 74px;
   }
 }
 
@@ -1511,4 +1511,281 @@ body.has-cookie-banner {
   .gallery-item {
     min-height: 180px;
   }
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────────── */
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.is-active {
+  display: block;
+}
+
+.site-nav a.is-active {
+  color: var(--primary);
+  border-bottom: 2px solid var(--accent);
+}
+
+/* ── Button extras ───────────────────────────────────────────────────────── */
+.button {
+  cursor: pointer;
+}
+
+.button.small {
+  min-height: 38px;
+  padding: 0.55rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 20px;
+}
+
+/* ── Slim cookie bar ─────────────────────────────────────────────────────── */
+.cookie-bar[hidden] {
+  display: none !important;
+}
+
+.cookie-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9000;
+  background: rgba(8, 36, 40, 0.97);
+  color: #fff;
+  padding: 14px 0;
+}
+
+.cookie-bar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.cookie-bar__text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.88);
+  flex: 1;
+  min-width: 200px;
+}
+
+.cookie-bar__text a {
+  color: #f0c070;
+}
+
+.cookie-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.cookie-bar__settings-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.cookie-bar-btn {
+  white-space: nowrap;
+}
+
+/* ── Cookie settings modal ───────────────────────────────────────────────── */
+.cookie-modal[hidden] {
+  display: none !important;
+}
+
+.cookie-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cookie-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.cookie-modal__box {
+  position: relative;
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.cookie-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cookie-modal__head h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.cookie-modal__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  color: #45535f;
+}
+
+.cookie-modal__choices {
+  display: grid;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.cookie-modal__choice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  cursor: pointer;
+}
+
+.cookie-modal__choice.is-required {
+  opacity: 0.72;
+  cursor: default;
+}
+
+.cookie-modal__choice strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.cookie-modal__choice span {
+  display: block;
+  font-size: 0.83rem;
+  color: #60707e;
+  margin-top: 2px;
+}
+
+.cookie-modal__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cookie-modal__note {
+  margin: 14px 0 0;
+  font-size: 0.82rem;
+  color: #60707e;
+}
+
+/* ── Map placeholder ─────────────────────────────────────────────────────── */
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 48px 24px;
+  text-align: center;
+  color: #60707e;
+  background: rgba(13, 92, 99, 0.04);
+  border-radius: 16px;
+  border: 1px dashed rgba(13, 92, 99, 0.2);
+  min-height: 200px;
+}
+
+.map-placeholder p {
+  margin: 0;
+}
+
+.map-placeholder__note {
+  font-size: 0.88rem;
+}
+
+/* ── Reviews ─────────────────────────────────────────────────────────────── */
+.stars {
+  color: var(--accent);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+.review-footer {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border, rgba(13, 92, 99, 0.12));
+  font-size: 0.85rem;
+  color: #60707e;
+  font-weight: 700;
+}
+
+/* ── Contact / Hours ─────────────────────────────────────────────────────── */
+.hours-list {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.hours-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 0.92rem;
+}
+
+.hours-list dt {
+  color: #45535f;
+  font-weight: 700;
+}
+
+.hours-list dd {
+  margin: 0;
+  color: #1c2a37;
+  font-weight: 700;
+}
+
+.contact-detail {
+  margin-top: 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.contact-note {
+  font-size: 0.85rem;
+  color: #60707e;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* ── Footer link button ──────────────────────────────────────────────────── */
+.footer-link-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-decoration: underline;
+  padding: 0;
 }
