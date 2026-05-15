@@ -519,6 +519,7 @@
     var container = document.getElementById('map-container');
     var placeholder = document.getElementById('map-placeholder');
     var acceptBtn = document.getElementById('map-accept-btn');
+    var mapIframe = null;
 
     if (!container || !placeholder) return;
 
@@ -531,16 +532,33 @@
 
     function loadMap() {
       if (!canLoadMap()) return;
-      if (container.querySelector('iframe')) return;
+      if (!mapIframe) {
+        mapIframe = document.createElement('iframe');
+        mapIframe.src = mapSrc;
+        mapIframe.loading = 'lazy';
+        mapIframe.title = 'Mapa lokalizacji biura';
+        mapIframe.setAttribute('aria-label', 'Mapa lokalizacji biura');
+        mapIframe.referrerPolicy = 'no-referrer-when-downgrade';
+        container.appendChild(mapIframe);
+      }
 
-      container.innerHTML = '';
-      var iframe = document.createElement('iframe');
-      iframe.src = mapSrc;
-      iframe.loading = 'lazy';
-      iframe.title = 'Mapa lokalizacji biura';
-      iframe.setAttribute('aria-label', 'Mapa lokalizacji biura');
-      iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      container.appendChild(iframe);
+      placeholder.hidden = true;
+    }
+
+    function unloadMap() {
+      if (mapIframe && mapIframe.parentNode) {
+        mapIframe.parentNode.removeChild(mapIframe);
+      }
+      mapIframe = null;
+      placeholder.hidden = false;
+    }
+
+    function syncMapState() {
+      if (canLoadMap()) {
+        loadMap();
+      } else {
+        unloadMap();
+      }
     }
 
     function unlockMap() {
@@ -550,14 +568,14 @@
         analytics: false,
         marketing: true
       }, 'partial');
-      loadMap();
+      syncMapState();
       if (typeof window.agentkaHideCookieBanner === 'function') {
         window.agentkaHideCookieBanner();
       }
     }
 
-    loadMap();
-    document.addEventListener('agentka:consentUpdated', loadMap);
+    syncMapState();
+    document.addEventListener('agentka:consentUpdated', syncMapState);
 
     if (acceptBtn) {
       acceptBtn.addEventListener('click', unlockMap);

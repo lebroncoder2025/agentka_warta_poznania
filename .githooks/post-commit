@@ -1,0 +1,10 @@
+#!/bin/sh
+
+branch="$(git branch --show-current)"
+if [ "$branch" = "main" ]; then
+  git push origin HEAD:main || {
+    printf '%s\n' 'Auto-push failed; commit was kept locally.' >&2
+  }
+fi
+
+exit 0

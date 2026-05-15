@@ -132,6 +132,12 @@ h1 {
   max-width: 12ch;
 }
 
+.hero h1 {
+  max-width: 11.2ch;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
 h2 {
   font-size: clamp(2.05rem, 4vw, 3.5rem);
   line-height: 1;
@@ -581,6 +587,7 @@ details summary::-webkit-details-marker {
 .hero-copy .subtitle {
   max-width: 62ch;
   font-size: clamp(1.03rem, 1.8vw, 1.22rem);
+  line-height: 1.82;
 }
 
 .hero-meta-grid {
@@ -1405,6 +1412,15 @@ details summary::-webkit-details-marker {
 
   .hero-copy {
     gap: 1rem;
+  }
+
+  .hero h1 {
+    max-width: 12.5ch;
+    line-height: 1.08;
+  }
+
+  .hero-copy .subtitle {
+    line-height: 1.72;
   }
 
   .hero-actions,
