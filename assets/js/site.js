@@ -596,10 +596,18 @@
     var bookingForm = document.getElementById('agentka-booking');
     var bookingStatus = document.getElementById('agentka-booking-status');
     var slotInput = bookingForm ? bookingForm.querySelector('[name="slot_id"]') : null;
+    var compactQuery = window.matchMedia ? window.matchMedia('(max-width: 760px)') : null;
+    var swipeState = {
+      startX: 0,
+      startY: 0,
+      tracking: false
+    };
+    var swipeHandlersAttached = false;
 
     var WEEKDAY_LABELS = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So'];
     var state = {
       month: startOfMonth(new Date()),
+      weekStart: getWeekStart(new Date()),
       selectedDate: null,
       selectedSlot: null
     };
@@ -632,6 +640,7 @@
       var normalized = startOfDay(date);
       state.selectedDate = normalized;
       state.month = startOfMonth(normalized);
+      state.weekStart = getWeekStart(normalized);
       clearSelectedSlot();
       updateStatus('', null);
       render();
@@ -646,6 +655,7 @@
       } else {
         state.selectedDate = new Date(state.month.getFullYear(), state.month.getMonth(), 1, 12);
       }
+      state.weekStart = getWeekStart(state.selectedDate);
       clearSelectedSlot();
       updateStatus('', null);
       render();
@@ -664,7 +674,92 @@
       return null;
     }
 
-    function render() {
+    function isCompactLayout() {
+      return !!(compactQuery && compactQuery.matches);
+    }
+
+    function isDateWithinRange(date, start, end) {
+      var value = startOfDay(date).getTime();
+      return value >= startOfDay(start).getTime() && value <= startOfDay(end).getTime();
+    }
+
+    function clampWeekStart(weekStart) {
+      var minWeekStart = getWeekStart(startOfDay(new Date()));
+      var maxWeekStart = getWeekStart(maxMonth);
+      var normalized = getWeekStart(weekStart || new Date());
+
+      if (normalized < minWeekStart) {
+        normalized = minWeekStart;
+      }
+      if (normalized > maxWeekStart) {
+        normalized = maxWeekStart;
+      }
+
+      return normalized;
+    }
+
+    function findFirstAvailableDateInWeek(weekStart) {
+      var cursor = startOfDay(weekStart);
+      var weekEnd = addDays(cursor, 6);
+      while (cursor <= weekEnd) {
+        if (getAvailableSlots(cursor).length) {
+          return startOfDay(cursor);
+        }
+        cursor = addDays(cursor, 1);
+      }
+      return null;
+    }
+
+    function formatWeekRange(weekStart) {
+      var start = startOfDay(weekStart);
+      var end = addDays(start, 6);
+      var monthFormat = new Intl.DateTimeFormat('pl-PL', { month: 'long' });
+      var yearFormat = new Intl.DateTimeFormat('pl-PL', { year: 'numeric' });
+      var startMonth = capitalize(monthFormat.format(start));
+      var endMonth = capitalize(monthFormat.format(end));
+      var year = yearFormat.format(end);
+
+      if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
+        return start.getDate() + '–' + end.getDate() + ' ' + startMonth + ' ' + year;
+      }
+
+      if (start.getFullYear() === end.getFullYear()) {
+        return start.getDate() + ' ' + startMonth + ' – ' + end.getDate() + ' ' + endMonth + ' ' + year;
+      }
+
+      return start.getDate() + ' ' + startMonth + ' ' + yearFormat.format(start) + ' – ' + end.getDate() + ' ' + endMonth + ' ' + year;
+    }
+
+    function getCompactWeekStart() {
+      var base = state.weekStart || getWeekStart(state.selectedDate || getFirstAvailableDate(new Date()));
+      var selected = state.selectedDate || findFirstAvailableDateInWeek(base) || base;
+
+      if (!isDateWithinRange(selected, base, addDays(base, 6))) {
+        base = getWeekStart(selected);
+      }
+
+      return clampWeekStart(base);
+    }
+
+    function setCompactWeekStart(weekStart, forceSelection) {
+      var normalized = clampWeekStart(weekStart);
+      state.weekStart = normalized;
+
+      var currentSelection = state.selectedDate;
+      var shouldKeepSelection = currentSelection && isDateWithinRange(currentSelection, normalized, addDays(normalized, 6));
+      var candidate = shouldKeepSelection ? currentSelection : findFirstAvailableDateInWeek(normalized) || normalized;
+
+      if (forceSelection || !shouldKeepSelection) {
+        state.selectedDate = candidate;
+      }
+
+      clearSelectedSlot();
+      updateStatus('', null);
+      render();
+      renderSlots(state.selectedDate);
+    }
+
+    function renderDesktop() {
       var monthStart = startOfMonth(state.month);
       var monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0, 12);
       var gridStart = getWeekStart(monthStart);
@@ -785,6 +880,159 @@
       });
     }
 
+    function attachSwipeHandlers() {
+      if (swipeHandlersAttached || !calendarEl || !compactQuery) return;
+
+      calendarEl.addEventListener('touchstart', function (event) {
+        if (!isCompactLayout()) return;
+        var touch = event.touches && event.touches[0];
+        if (!touch) return;
+        swipeState.startX = touch.clientX;
+        swipeState.startY = touch.clientY;
+        swipeState.tracking = true;
+      }, { passive: true });
+
+      calendarEl.addEventListener('touchend', function (event) {
+        if (!isCompactLayout() || !swipeState.tracking) return;
+        var touch = event.changedTouches && event.changedTouches[0];
+        swipeState.tracking = false;
+        if (!touch) return;
+
+        var deltaX = touch.clientX - swipeState.startX;
+        var deltaY = touch.clientY - swipeState.startY;
+        if (Math.abs(deltaX) < 60 || Math.abs(deltaX) < Math.abs(deltaY) + 18) return;
+
+        var direction = deltaX < 0 ? 1 : -1;
+        setCompactWeekStart(addDays(getCompactWeekStart(), direction * 7), false);
+      }, { passive: true });
+
+      calendarEl.addEventListener('touchcancel', function () {
+        swipeState.tracking = false;
+      }, { passive: true });
+
+      swipeHandlersAttached = true;
+    }
+
+    function renderCompact() {
+      var weekStart = getCompactWeekStart();
+      var weekEnd = addDays(weekStart, 6);
+      var weekLabel = formatWeekRange(weekStart);
+      var prevWeek = clampWeekStart(addDays(weekStart, -7));
+      var nextWeek = clampWeekStart(addDays(weekStart, 7));
+      var canPrev = prevWeek.getTime() !== weekStart.getTime();
+      var canNext = nextWeek.getTime() !== weekStart.getTime();
+      var activeDate = state.selectedDate && isDateWithinRange(state.selectedDate, weekStart, weekEnd)
+        ? state.selectedDate
+        : findFirstAvailableDateInWeek(weekStart) || weekStart;
+      var activeSlots = getAvailableSlots(activeDate);
+      var availableDays = 0;
+      var availableHours = 0;
+      var html = '';
+
+      html += '<div class="agentka-calendar-shell agentka-calendar-shell--compact">';
+      html += '<div class="agentka-calendar-head">';
+      html += '<div class="agentka-calendar-title">';
+      html += '<p class="agentka-kicker">Tydzień w pigułce</p>';
+      html += '<h3>' + escapeHtml(weekLabel) + '</h3>';
+      html += '<p>Przesuń listę w bok albo użyj strzałek, aby zmienić tydzień. Kliknij dzień, by zobaczyć godziny.</p>';
+      html += '</div>';
+      html += '<div class="agentka-calendar-navs">';
+      html += '<button type="button" class="agentka-calendar-nav" data-week-prev aria-label="Poprzedni tydzień" ' + (canPrev ? '' : 'disabled') + '>‹</button>';
+      html += '<button type="button" class="agentka-calendar-nav" data-week-next aria-label="Następny tydzień" ' + (canNext ? '' : 'disabled') + '>›</button>';
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="agentka-calendar-focus">';
+      html += '<div class="agentka-calendar-focus-copy">';
+      html += '<p class="agentka-kicker">Aktywny dzień</p>';
+      html += '<strong>' + escapeHtml(formatDate(activeDate)) + '</strong>';
+      html += '<span>' + escapeHtml(activeSlots.length ? 'Masz ' + activeSlots.length + ' wolnych godzin' : 'Ten dzień nie ma wolnych godzin') + '</span>';
+      html += '</div>';
+      html += '<div class="agentka-calendar-focus-chip">';
+      html += '<span>W tym dniu</span>';
+      html += '<strong>' + escapeHtml(String(activeSlots.length)) + ' godzin</strong>';
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="agentka-calendar-gesture-hint">Przesuń palcem w bok, aby przejść o tydzień</div>';
+      html += '<div class="agentka-week-list">';
+
+      var day = new Date(weekStart);
+      while (day <= weekEnd) {
+        var slots = getAvailableSlots(day);
+        var isToday = isSameDate(day, startOfDay(new Date()));
+        var isSelected = isSameDate(day, state.selectedDate);
+        var disabled = !slots.length;
+        var classes = ['agentka-week-day'];
+
+        if (disabled) classes.push('is-disabled');
+        if (isToday) classes.push('is-today');
+        if (isSelected) classes.push('is-active');
+        if (slots.length) classes.push('is-available');
+
+        if (slots.length) {
+          availableDays += 1;
+          availableHours += slots.length;
+        }
+
+        html += '<button type="button" class="' + classes.join(' ') + '" data-date="' + toDateKey(day) + '"' + (disabled ? ' disabled' : '') + ' aria-pressed="' + (isSelected ? 'true' : 'false') + '">';
+        html += '<span class="agentka-week-day-date"><strong>' + day.getDate() + '</strong><small>' + WEEKDAY_LABELS[day.getDay()] + '</small></span>';
+        html += '<span class="agentka-week-day-body">';
+        html += '<span class="agentka-week-day-label">' + escapeHtml(formatDate(day)) + '</span>';
+        html += '<span class="agentka-week-day-meta">' + (slots.length ? slots.length + ' wolne godziny' : 'Brak terminów') + '</span>';
+        html += '</span>';
+        html += '<span class="agentka-week-day-chip">' + (slots.length ? String(slots.length) : '0') + '</span>';
+        html += '</button>';
+
+        day = addDays(day, 1);
+      }
+
+      html += '</div>';
+      html += '<div class="agentka-calendar-stats">';
+      html += '<article><strong>' + String(availableDays) + '</strong><span>Dni z terminami</span></article>';
+      html += '<article><strong>' + String(availableHours) + '</strong><span>Wolnych godzin</span></article>';
+      html += '</div>';
+      html += '</div>';
+
+      calendarEl.innerHTML = html;
+
+      var prevBtn = calendarEl.querySelector('[data-week-prev]');
+      var nextBtn = calendarEl.querySelector('[data-week-next]');
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function () {
+          if (canPrev) {
+            setCompactWeekStart(addDays(weekStart, -7), false);
+          }
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function () {
+          if (canNext) {
+            setCompactWeekStart(addDays(weekStart, 7), false);
+          }
+        });
+      }
+
+      Array.prototype.slice.call(calendarEl.querySelectorAll('[data-date]')).forEach(function (button) {
+        button.addEventListener('click', function () {
+          var clickedDate = fromDateKey(button.getAttribute('data-date'));
+          if (button.disabled) return;
+          selectDate(clickedDate);
+        });
+      });
+
+      attachSwipeHandlers();
+    }
+
+    function render() {
+      if (isCompactLayout()) {
+        renderCompact();
+        return;
+      }
+
+      renderDesktop();
+    }
+
     function renderSlots(date) {
       var slots = getAvailableSlots(date);
       var selectedLabel = formatDate(date);
@@ -844,6 +1092,7 @@
     function resetSelection() {
       state.selectedDate = getFirstAvailableDate(new Date());
       state.month = startOfMonth(state.selectedDate);
+      state.weekStart = getWeekStart(state.selectedDate);
       clearSelectedSlot();
       updateStatus('', null);
       render();
@@ -881,6 +1130,23 @@
 
     state.selectedDate = getFirstAvailableDate(new Date());
     state.month = startOfMonth(state.selectedDate);
+    state.weekStart = getWeekStart(state.selectedDate);
+
+    if (compactQuery) {
+      var handleViewportChange = function () {
+        state.month = startOfMonth(state.selectedDate || getFirstAvailableDate(new Date()));
+        state.weekStart = getWeekStart(state.selectedDate || getFirstAvailableDate(new Date()));
+        render();
+        renderSlots(state.selectedDate);
+      };
+
+      if (typeof compactQuery.addEventListener === 'function') {
+        compactQuery.addEventListener('change', handleViewportChange);
+      } else if (typeof compactQuery.addListener === 'function') {
+        compactQuery.addListener(handleViewportChange);
+      }
+    }
+
     render();
     renderSlots(state.selectedDate);
   }

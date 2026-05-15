@@ -776,6 +776,70 @@ details summary::-webkit-details-marker {
   margin-top: 1rem;
 }
 
+.value-section {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 1.25rem;
+  padding: clamp(1.2rem, 3vw, 1.8rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at top left, rgba(13, 92, 99, 0.08), transparent 34%),
+    linear-gradient(135deg, rgba(13, 92, 99, 0.06), rgba(255, 255, 255, 0.8));
+  box-shadow: var(--shadow-card);
+}
+
+.value-section__head {
+  display: grid;
+  gap: 0.45rem;
+  max-width: 74ch;
+}
+
+.value-section__head h2 {
+  max-width: none;
+  font-size: clamp(1.9rem, 3.2vw, 2.85rem);
+}
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.value-card {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.25rem;
+  border-radius: 24px;
+  border: 1px solid rgba(13, 92, 99, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 28px rgba(8, 59, 69, 0.06);
+  min-width: 0;
+}
+
+.value-card span {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.38rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(13, 92, 99, 0.08);
+  color: var(--primary-dark);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.value-card h3 {
+  font-size: 1.18rem;
+  line-height: 1.18;
+}
+
+.value-card p {
+  color: var(--muted);
+}
+
 .step-card {
   display: grid;
   gap: 0.8rem;
@@ -1270,6 +1334,7 @@ details summary::-webkit-details-marker {
 
 @media (max-width: 1180px) {
   .services-grid,
+  .value-grid,
   .reviews-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1308,6 +1373,10 @@ details summary::-webkit-details-marker {
   .hero-contact-strip,
   .contact-grid,
   .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .value-grid {
     grid-template-columns: 1fr;
   }
 

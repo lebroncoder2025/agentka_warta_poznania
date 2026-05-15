@@ -91,6 +91,10 @@
   gap: 1rem;
 }
 
+.agentka-calendar-shell--compact {
+  gap: 0.85rem;
+}
+
 .agentka-calendar-head {
   display: flex;
   align-items: flex-start;
@@ -169,6 +173,140 @@
   color: var(--primary-dark);
   font-size: 0.98rem;
   line-height: 1.15;
+}
+
+.agentka-calendar-gesture-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: start;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(13, 92, 99, 0.07);
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.agentka-week-list {
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+  touch-action: pan-y;
+}
+
+.agentka-week-day {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: center;
+  min-height: 78px;
+  padding: 0.9rem 1rem;
+  border-radius: 22px;
+  border: 1px solid rgba(13, 92, 99, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 246, 239, 0.88));
+  color: var(--text);
+  box-shadow: 0 10px 20px rgba(8, 59, 69, 0.05);
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  min-width: 0;
+}
+
+.agentka-week-day:hover,
+.agentka-week-day:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(13, 92, 99, 0.22);
+  box-shadow: 0 18px 32px rgba(8, 59, 69, 0.1);
+}
+
+.agentka-week-day:focus-visible {
+  outline: 3px solid rgba(13, 92, 99, 0.14);
+  outline-offset: 2px;
+}
+
+.agentka-week-day.is-active {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--primary) 0%, #117e84 100%);
+  box-shadow: 0 18px 40px rgba(13, 92, 99, 0.24);
+  color: #fff;
+}
+
+.agentka-week-day.is-active .agentka-week-day-label,
+.agentka-week-day.is-active .agentka-week-day-meta,
+.agentka-week-day.is-active .agentka-week-day-date small {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.agentka-week-day.is-active .agentka-week-day-date strong,
+.agentka-week-day.is-active .agentka-week-day-chip {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.agentka-week-day.is-disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.agentka-week-day-date {
+  display: grid;
+  place-items: center;
+  gap: 0.1rem;
+  width: 3.35rem;
+  min-width: 3.35rem;
+}
+
+.agentka-week-day-date strong {
+  display: grid;
+  place-items: center;
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 16px;
+  background: rgba(13, 92, 99, 0.08);
+  font-size: 1.08rem;
+  line-height: 1;
+}
+
+.agentka-week-day-date small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.agentka-week-day-body {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.agentka-week-day-label {
+  color: var(--primary-dark);
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.agentka-week-day-meta {
+  color: var(--muted);
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
+
+.agentka-week-day-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.7rem;
+  min-height: 2.7rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 16px;
+  background: rgba(13, 92, 99, 0.08);
+  color: var(--primary-dark);
+  font-size: 0.94rem;
+  font-weight: 900;
 }
 
 .agentka-calendar-navs {
@@ -785,6 +923,22 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .agentka-week-day {
+    min-height: 84px;
+  }
+
+  .agentka-week-day-date strong {
+    width: 2.65rem;
+    height: 2.65rem;
+    font-size: 1rem;
+  }
+
+  .agentka-week-day-chip {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    font-size: 0.88rem;
+  }
+
   .agentka-day-label {
     font-size: 0.68rem;
     letter-spacing: 0.1em;
@@ -851,6 +1005,20 @@
     grid-template-columns: 1fr;
   }
 
+  .agentka-week-day {
+    gap: 0.65rem;
+    padding: 0.82rem 0.9rem;
+    border-radius: 20px;
+  }
+
+  .agentka-week-day-label {
+    font-size: 0.9rem;
+  }
+
+  .agentka-week-day-meta {
+    font-size: 0.78rem;
+  }
+
   .agentka-slot-button {
     padding: 0.76rem 0.85rem;
   }
@@ -863,5 +1031,14 @@
 @media (max-width: 380px) {
   .agentka-calendar-focus-copy strong {
     font-size: 0.98rem;
+  }
+
+  .agentka-week-day {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .agentka-week-day-chip {
+    justify-self: end;
   }
 }
