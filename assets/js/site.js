@@ -674,6 +674,10 @@
       var nextMonth = addMonths(monthStart, 1);
       var canPrev = compareMonths(monthStart, minMonth) > 0;
       var canNext = compareMonths(monthStart, maxMonth) < 0;
+      var activeDate = state.selectedDate || findFirstAvailableDateInMonth(monthStart) || monthStart;
+      var activeSlots = getAvailableSlots(activeDate);
+      var availableDays = 0;
+      var availableHours = 0;
 
       var html = '';
       html += '<div class="agentka-calendar-shell">';
@@ -686,6 +690,17 @@
       html += '<div class="agentka-calendar-navs">';
       html += '<button type="button" class="agentka-calendar-nav" data-cal-prev aria-label="Poprzedni miesiąc" ' + (canPrev ? '' : 'disabled') + '>‹</button>';
       html += '<button type="button" class="agentka-calendar-nav" data-cal-next aria-label="Następny miesiąc" ' + (canNext ? '' : 'disabled') + '>›</button>';
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="agentka-calendar-focus">';
+      html += '<div class="agentka-calendar-focus-copy">';
+      html += '<p class="agentka-kicker">Aktywny dzień</p>';
+      html += '<strong>' + escapeHtml(formatDate(activeDate)) + '</strong>';
+      html += '<span>' + escapeHtml(activeSlots.length ? 'Masz ' + activeSlots.length + ' wolnych godzin' : 'Ten dzień nie ma wolnych godzin') + '</span>';
+      html += '</div>';
+      html += '<div class="agentka-calendar-focus-chip">';
+      html += '<span>W tym dniu</span>';
+      html += '<strong>' + escapeHtml(String(activeSlots.length)) + ' godzin</strong>';
       html += '</div>';
       html += '</div>';
       html += '<div class="agentka-calendar-legend">';
@@ -709,6 +724,11 @@
         var disabled = !slots.length;
         var classes = ['agentka-day-button'];
 
+        if (!outsideMonth && slots.length) {
+          availableDays += 1;
+          availableHours += slots.length;
+        }
+
         if (outsideMonth) classes.push('is-outside');
         if (disabled) classes.push('is-disabled');
         if (isToday) classes.push('is-today');
@@ -728,6 +748,10 @@
         day = addDays(day, 1);
       }
 
+      html += '</div>';
+      html += '<div class="agentka-calendar-stats">';
+      html += '<article><strong>' + String(availableDays) + '</strong><span>Dni z terminami</span></article>';
+      html += '<article><strong>' + String(availableHours) + '</strong><span>Wolnych godzin</span></article>';
       html += '</div>';
       html += '</div>';
 

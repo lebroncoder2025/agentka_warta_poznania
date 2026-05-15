@@ -117,6 +117,60 @@
   overflow-wrap: anywhere;
 }
 
+.agentka-calendar-focus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 1rem 1.05rem;
+  border: 1px solid rgba(13, 92, 99, 0.11);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(13, 92, 99, 0.07), rgba(255, 255, 255, 0.9));
+  box-shadow: 0 14px 28px rgba(8, 59, 69, 0.06);
+  min-width: 0;
+}
+
+.agentka-calendar-focus-copy {
+  display: grid;
+  gap: 0.24rem;
+  min-width: 0;
+}
+
+.agentka-calendar-focus-copy strong {
+  color: var(--primary-dark);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.agentka-calendar-focus-copy span {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.agentka-calendar-focus-chip {
+  display: grid;
+  justify-items: end;
+  gap: 0.12rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 18px;
+  background: rgba(13, 92, 99, 0.08);
+  min-width: 0;
+}
+
+.agentka-calendar-focus-chip span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.agentka-calendar-focus-chip strong {
+  color: var(--primary-dark);
+  font-size: 0.98rem;
+  line-height: 1.15;
+}
+
 .agentka-calendar-navs {
   display: flex;
   gap: 0.55rem;
@@ -217,8 +271,8 @@
   position: relative;
   display: grid;
   gap: 0.45rem;
-  min-height: 96px;
-  padding: 0.82rem;
+  min-height: 104px;
+  padding: 0.92rem 1rem;
   text-align: left;
   border-radius: 20px;
   border: 1px solid rgba(13, 92, 99, 0.12);
@@ -276,20 +330,44 @@
   color: rgba(255, 255, 255, 0.82);
 }
 
+.agentka-day-button.is-active .agentka-day-date strong {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.agentka-day-button.is-active .agentka-day-badge {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  box-shadow: none;
+}
+
 .agentka-day-button.is-today {
   box-shadow: inset 0 0 0 2px rgba(13, 92, 99, 0.12), 0 10px 20px rgba(8, 59, 69, 0.05);
 }
 
-.agentka-day-top {
-  display: flex;
+.agentka-day-date {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.5rem;
+  min-width: 0;
 }
 
-.agentka-day-top strong {
-  font-size: 1.15rem;
+.agentka-day-date strong {
+  display: grid;
+  place-items: center;
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 16px;
+  background: rgba(13, 92, 99, 0.08);
+  font-size: 1.14rem;
   line-height: 1;
+  flex: none;
+}
+
+.agentka-day-body {
+  display: grid;
+  gap: 0.22rem;
+  min-width: 0;
 }
 
 .agentka-day-label {
@@ -318,6 +396,37 @@
   color: var(--primary-dark);
   font-size: 0.74rem;
   font-weight: 800;
+}
+
+.agentka-calendar-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.agentka-calendar-stats article {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(13, 92, 99, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 10px 20px rgba(8, 59, 69, 0.04);
+  min-width: 0;
+}
+
+.agentka-calendar-stats strong {
+  color: var(--primary-dark);
+  font-size: 1.18rem;
+  line-height: 1;
+}
+
+.agentka-calendar-stats span {
+  color: var(--muted);
+  font-size: 0.83rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .agentka-summary-card,
@@ -621,7 +730,7 @@
   }
 
   #agentka-calendar {
-    padding: 0.7rem;
+    padding: 0.8rem;
     border-radius: 22px;
   }
 
@@ -640,13 +749,13 @@
   }
 
   .agentka-calendar-days {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.45rem;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 
   .agentka-day-button {
-    min-height: 88px;
-    padding: 0.72rem;
+    min-height: 78px;
+    padding: 0.82rem 0.9rem;
     border-radius: 18px;
   }
 
@@ -654,18 +763,26 @@
     font-size: 0.94rem;
   }
 
-  .agentka-day-top {
-    position: relative;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.2rem;
-    padding-right: 2rem;
+  .agentka-calendar-legend {
+    display: none;
   }
 
-  .agentka-day-badge {
-    position: absolute;
-    top: 0;
-    right: 0;
+  .agentka-calendar-focus {
+    position: sticky;
+    top: 88px;
+    z-index: 2;
+    grid-template-columns: 1fr;
+    background: rgba(255, 251, 244, 0.96);
+    backdrop-filter: blur(16px);
+  }
+
+  .agentka-calendar-focus-chip {
+    justify-items: start;
+    width: fit-content;
+  }
+
+  .agentka-calendar-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .agentka-day-label {
@@ -674,7 +791,7 @@
   }
 
   .agentka-day-meta {
-    font-size: 0.74rem;
+    font-size: 0.78rem;
   }
 
   .agentka-slots-head {
@@ -687,8 +804,14 @@
     gap: 0.25rem;
   }
 
-  .agentka-day-top strong {
-    font-size: 1rem;
+  .agentka-day-date {
+    gap: 0.45rem;
+  }
+
+  .agentka-day-date strong {
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 1.02rem;
   }
 
   .agentka-form-grid {
@@ -706,24 +829,9 @@
 }
 
 @media (max-width: 560px) {
-  .agentka-calendar-days {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.4rem;
-  }
-
   .agentka-day-button {
-    min-height: 74px;
-    padding: 0.68rem;
-  }
-
-  .agentka-day-top {
-    flex-direction: row;
-    align-items: center;
-    padding-right: 0;
-  }
-
-  .agentka-day-badge {
-    position: static;
+    min-height: 72px;
+    padding: 0.74rem 0.82rem;
   }
 
   .agentka-day-label {
@@ -731,8 +839,16 @@
   }
 
   .agentka-day-meta {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     line-height: 1.2;
+  }
+
+  .agentka-calendar-focus {
+    gap: 0.7rem;
+  }
+
+  .agentka-calendar-stats {
+    grid-template-columns: 1fr;
   }
 
   .agentka-slot-button {
@@ -745,7 +861,7 @@
 }
 
 @media (max-width: 380px) {
-  .agentka-calendar-days {
-    grid-template-columns: 1fr;
+  .agentka-calendar-focus-copy strong {
+    font-size: 0.98rem;
   }
 }

@@ -133,9 +133,15 @@ h1 {
 }
 
 .hero h1 {
-  max-width: 11.2ch;
-  line-height: 1.05;
+  display: grid;
+  gap: 0.14em;
+  max-width: 22ch;
+  line-height: 1.02;
   text-wrap: balance;
+}
+
+.hero h1 span {
+  display: block;
 }
 
 h2 {
@@ -460,23 +466,10 @@ details summary::-webkit-details-marker {
   height: 2px;
   border-radius: 999px;
   background: var(--primary-dark);
-  transition: transform 220ms ease, opacity 220ms ease;
 }
 
 .nav-toggle span + span {
   margin-top: 0;
-}
-
-.site-header.nav-open .nav-toggle span:nth-child(1) {
-  transform: translateY(6px) rotate(45deg);
-}
-
-.site-header.nav-open .nav-toggle span:nth-child(2) {
-  opacity: 0;
-}
-
-.site-header.nav-open .nav-toggle span:nth-child(3) {
-  transform: translateY(-6px) rotate(-45deg);
 }
 
 .page-header {
@@ -1415,8 +1408,8 @@ details summary::-webkit-details-marker {
   }
 
   .hero h1 {
-    max-width: 12.5ch;
-    line-height: 1.08;
+    max-width: 18ch;
+    line-height: 1.06;
   }
 
   .hero-copy .subtitle {
