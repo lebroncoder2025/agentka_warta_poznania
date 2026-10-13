@@ -186,7 +186,7 @@
         'Temat: ' + data.get('topic'), 'Proponowany dzień: ' + data.get('date'), 'Pora: ' + data.get('time'), '',
         String(data.get('message') || '').trim()].join('\n');
       document.getElementById('appointment-draft-text').value = message;
-      document.getElementById('appointment-mail-link').href = 'mailto:mimi017011@gmail.com?subject=' + encodeURIComponent('Konsultacja — ' + data.get('name')) + '&body=' + encodeURIComponent(message);
+      document.getElementById('appointment-mail-link').href = 'mailto:rozek.patrycja@allianz.com.pl?subject=' + encodeURIComponent('Konsultacja — ' + data.get('name')) + '&body=' + encodeURIComponent(message);
       document.getElementById('appointment-draft').hidden = false;
       document.getElementById('appointment-status').textContent = 'Wiadomość jest gotowa. Otwórz swoją pocztę lub skopiuj jej treść, a następnie wyślij. Termin potwierdzę po kontakcie.';
       document.getElementById('appointment-draft').scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
@@ -195,7 +195,7 @@
       var draft = document.getElementById('appointment-draft-text');
       try {
         await navigator.clipboard.writeText(draft.value);
-        document.getElementById('appointment-status').textContent = 'Skopiowano wiadomość. Wklej ją do e-maila na mimi017011@gmail.com i wyślij.';
+        document.getElementById('appointment-status').textContent = 'Skopiowano wiadomość. Wklej ją do e-maila na rozek.patrycja@allianz.com.pl i wyślij.';
       } catch (error) {
         draft.focus(); draft.select();
         document.getElementById('appointment-status').textContent = 'Zaznaczyłem treść wiadomości. Skopiuj ją skrótem Ctrl+C lub poleceniem Kopiuj.';
