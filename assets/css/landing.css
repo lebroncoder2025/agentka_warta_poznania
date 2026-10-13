@@ -534,3 +534,53 @@ a:not(.button):not(.brand):not(.footer-social-link) { text-decoration-thickness:
   .calculator-controls input[type="range"]:hover::-webkit-slider-thumb { border-color: #cd8c49; background: #fff8e8; box-shadow: 0 0 0 5px #e4ac7324; }
   .calculator-controls input[type="range"]:hover::-moz-range-thumb { border-color: #cd8c49; background: #fff8e8; box-shadow: 0 0 0 5px #e4ac7324; }
 }
+
+/* Orbit the labels while keeping their text upright. The photograph stays still. */
+.portrait-tag-orbit {
+  --orbit-delay: 0s;
+  --orbit-angle: 0deg;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 0;
+  transform-origin: center;
+  pointer-events: none;
+  animation: portrait-tag-orbit 36s linear infinite;
+  animation-delay: var(--orbit-delay);
+}
+.orbit-home { --orbit-delay: -24s; --orbit-angle: 240deg; }
+.orbit-family { --orbit-delay: 0s; --orbit-angle: 0deg; }
+.orbit-car { --orbit-delay: -12s; --orbit-angle: 120deg; }
+.portrait-tag-orbit > .portrait-tag {
+  top: 0;
+  left: 96%;
+  right: auto;
+  bottom: auto;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  animation: portrait-tag-upright 36s linear infinite;
+  animation-delay: var(--orbit-delay);
+}
+@keyframes portrait-tag-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes portrait-tag-upright {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+.portrait-scene { margin-bottom: 28px; }
+.portrait-signature { bottom: -34px; }
+@media (max-width: 1100px) {
+  .portrait-tag-orbit > .portrait-tag { left: 88%; }
+}
+@media (max-width: 640px) {
+  .portrait-scene { margin-bottom: 10px; }
+  .portrait-signature { bottom: -10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portrait-tag-orbit, .portrait-tag-orbit > .portrait-tag { animation: none !important; }
+  .portrait-tag-orbit { transform: rotate(var(--orbit-angle)); }
+  .portrait-tag-orbit > .portrait-tag { transform: translate(-50%, -50%) rotate(calc(-1 * var(--orbit-angle))); }
+}
