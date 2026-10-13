@@ -34,6 +34,8 @@
     var navLinks = Array.from(document.querySelectorAll('.site-nav a[href^="#"]'));
     var sections = navLinks.map(function (link) { return document.querySelector(link.getAttribute('href')); }).filter(Boolean);
     if (!sections.length || !('IntersectionObserver' in window)) return;
+    var start = document.getElementById('start');
+    if (start) sections.unshift(start);
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
@@ -136,19 +138,24 @@
   function initReviews() {
     var track = document.getElementById('review-track');
     if (!track) return;
-    var previous = document.getElementById('reviews-prev');
-    var next = document.getElementById('reviews-next');
+    var pagination = document.getElementById('reviews-pagination');
+    var buttons = Array.from(pagination.querySelectorAll('[data-review-index]'));
+    function cardStep() {
+      return track.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 0);
+    }
     function update() {
-      previous.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+      pagination.hidden = track.scrollWidth <= track.clientWidth + 2;
+      var current = Math.min(buttons.length - 1, Math.round(track.scrollLeft / cardStep()));
+      buttons.forEach(function (button, index) {
+        if (index === current) button.setAttribute('aria-current', 'true');
+        else button.removeAttribute('aria-current');
+      });
     }
-    function move(direction) {
-      var first = track.firstElementChild;
-      var step = first.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 0);
-      track.scrollBy({ left: step * direction, behavior: scrollBehavior() });
-    }
-    previous.addEventListener('click', function () { move(-1); });
-    next.addEventListener('click', function () { move(1); });
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        track.scrollTo({ left: cardStep() * Number(button.dataset.reviewIndex), behavior: scrollBehavior() });
+      });
+    });
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
