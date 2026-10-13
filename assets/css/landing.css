@@ -251,7 +251,7 @@ input[type="range"]::-moz-range-thumb { width: 11px; height: 11px; border-radius
 .site-footer { border-top: 1px solid #e1e0d2; padding: 25px 0 35px; background: #f5f3eb; }
 .footer-inner small { font-size: 9px; color: #a0a38b; font-weight: 400; }
 .footer-nav a, .footer-link-btn { font-size: 9px; color: #959d82; font-weight: 500; }
-.footer-social-link { background: #3f7652; box-shadow: none; width: 30px; height: 30px; }
+.footer-nav .footer-social-link { background: #3f7652; box-shadow: none; width: auto; height: 44px; padding: 0 14px; gap: 8px; border-radius: 10px; }
 .footer-social-link svg { width: 14px; height: 14px; }
 .mobile-cta-bar { display: none; }
 .cookie-bar { background: #fffdf3f5; box-shadow: 0 -6px 25px #3948250a; }
@@ -293,7 +293,7 @@ input[type="range"]::-moz-range-thumb { width: 11px; height: 11px; border-radius
 .landing-faq summary { font-size: 14px; }
 .consultation-contact a { font-size: 14px; }
 .consultation-contact small { font-size: 11px; color: #7d886b; }
-.footer-nav .footer-social-link { color: white; }
+.footer-nav .footer-social-link { color: white; font-size: 12px; font-weight: 700; }
 
 @media (max-width: 1100px) {
   .site-nav { gap: 12px; }
