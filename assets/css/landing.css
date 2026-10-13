@@ -584,3 +584,46 @@ a:not(.button):not(.brand):not(.footer-social-link) { text-decoration-thickness:
   .portrait-tag-orbit { transform: rotate(var(--orbit-angle)); }
   .portrait-tag-orbit > .portrait-tag { transform: translate(-50%, -50%) rotate(calc(-1 * var(--orbit-angle))); }
 }
+
+/* Give the portrait caption its own row, independent of image and label size. */
+.portrait-visual {
+  width: 100%;
+  max-width: 455px;
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+.portrait-visual > .portrait-scene { width: 100%; max-width: none; margin: 0; }
+.portrait-visual > .portrait-signature {
+  position: static;
+  display: block;
+  transform: none;
+  text-align: center;
+  line-height: 1.5;
+}
+.portrait-signature small { font-size: 11px; line-height: 1.5; }
+.zus-options label { min-width: 0; display: flex; }
+.zus-options label > span { width: 100%; overflow-wrap: anywhere; align-content: center; line-height: 1.4; }
+.consultation-contact > div > span { min-width: 0; }
+.range-field output { flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .portrait-visual { width: min(100%, 380px); gap: 18px; }
+  .portrait-visual > .portrait-signature { font-size: 14px; }
+  .portrait-signature small { font-size: 10px; }
+  .brand-statement > p { font-size: clamp(43px, 14.6vw, 57px); }
+}
+@media (max-width: 420px) {
+  .portrait-tag-orbit > .portrait-tag { left: 85%; }
+  .result-stats { grid-template-columns: 1fr; gap: 16px; }
+  .result-stats > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 14px; align-items: center; }
+  .result-stats span { grid-column: 1; grid-row: 1; font-size: 10px; }
+  .result-stats small { grid-column: 1; grid-row: 2; font-size: 9px; }
+  .result-stats strong { grid-column: 2; grid-row: 1 / 3; margin: 0; font-size: 18px; white-space: nowrap; }
+  .landing-actions .button { flex: 1 1 auto; text-align: center; }
+}
+@media (max-width: 360px) {
+  .calculator-result .result-total { font-size: 42px !important; }
+}
