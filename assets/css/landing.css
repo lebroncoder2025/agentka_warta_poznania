@@ -212,7 +212,11 @@ input[type="range"]::-moz-range-thumb { width: 11px; height: 11px; border-radius
 .landing-faq details { border-bottom: 1px solid #e0dfd1; }
 .landing-faq details:first-child { border-top: 1px solid #e0dfd1; }
 .landing-faq summary { cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 22px 0; font-size: 12px; font-weight: 600; color: #596953; }
-.landing-faq summary > span { display: flex; align-items: center; justify-content: center; border: 1px solid #d6c6a4; border-radius: 50%; width: 22px; height: 22px; font-size: 16px; color: #bc945c; flex: none; transition: transform .2s; }
+.landing-faq summary > span { position: relative; display: block; border: 1px solid #d6c6a4; border-radius: 50%; width: 22px; height: 22px; font-size: 0; line-height: 0; color: #bc945c; flex: none; transition: transform .2s; }
+.landing-faq summary > span::before,
+.landing-faq summary > span::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: currentColor; border-radius: 1px; }
+.landing-faq summary > span::before { width: 9px; height: 1.5px; }
+.landing-faq summary > span::after { width: 1.5px; height: 9px; }
 .landing-faq details[open] summary > span { transform: rotate(45deg); }
 .landing-faq p { margin: 0 30px 22px 0; font-size: 12px; color: #8a907e; }
 .landing-faq p a { color: #557e4f; }
